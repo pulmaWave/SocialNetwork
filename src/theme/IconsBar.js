@@ -4,6 +4,7 @@ import FlightIcon from '@mui/icons-material/Flight';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { Box, IconButton } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const IconsBar = () => {
   return (
@@ -11,22 +12,30 @@ const IconsBar = () => {
       sx={{ display: 'flex', width: '100%', justifyContent: 'space-evenly' }}
     >
       <IconButton color="error">
-        <AccountBalanceIcon sx={{ width: '40px', height: '40px' }} />
+        <Link to="/">
+          <AccountBalanceIcon sx={{ width: '40px', height: '40px' }} />
+        </Link>
       </IconButton>
       <IconButton>
-        <FlightIcon
-          sx={{
-            width: '40px',
-            height: '40px',
-            transform: 'rotate(45deg)'
-          }}
-        />
+        <Link to="travel">
+          <FlightIcon
+            sx={{
+              width: '40px',
+              height: '40px',
+              transform: 'rotate(45deg)'
+            }}
+          />
+        </Link>
       </IconButton>
       <IconButton>
-        <RestaurantIcon sx={{ width: '40px', height: '40px' }} />
+        <Link to="food">
+          <RestaurantIcon sx={{ width: '40px', height: '40px' }} />
+        </Link>
       </IconButton>
       <IconButton>
-        <AutoFixHighIcon sx={{ width: '40px', height: '40px' }} />
+        <Link to="beauty">
+          <AutoFixHighIcon sx={{ width: '40px', height: '40px' }} />
+        </Link>
       </IconButton>
     </Box>
   );

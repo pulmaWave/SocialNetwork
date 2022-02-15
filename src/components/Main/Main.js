@@ -1,8 +1,12 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
+
 import { Box } from '@mui/material';
 import SideBar from './SideBar/SideBar';
 import RightSideBar from './RightSideBar/RightSideBar';
-import Post from './Post';
+import colors from '../../assets/style/GlobalStyles';
+
+const color = colors.colors;
 
 const main = () => {
   return (
@@ -10,7 +14,8 @@ const main = () => {
       sx={{
         display: 'flex',
         justifyContent: 'space-between',
-        padding: '0 30px '
+        padding: '0 30px ',
+        backgroundColor: `${color.gray[100]}`
       }}
     >
       <Box sx={{ width: 400 }}>
@@ -18,20 +23,7 @@ const main = () => {
           <SideBar />
         </Box>
       </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 3,
-          mt: '30px',
-          paddingBottom: '20px'
-        }}
-      >
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-      </Box>
+      <Outlet />
       <Box sx={{ width: 400 }}>
         <Box sx={{ position: 'fixed', width: 'inherit' }}>
           <RightSideBar />

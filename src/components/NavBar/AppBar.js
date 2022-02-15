@@ -16,8 +16,10 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import IconsBar from '../../theme/IconsBar';
-import { ThemeProvider, createTheme } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import firebase from '../../config/firebase';
 
+// import Tabs from '../Tabs';
 import colors from '../../assets/style/GlobalStyles';
 const color = colors.colors;
 
@@ -57,6 +59,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -76,9 +80,22 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   };
 
+  const handleMenuSignOut = () => {
+    localStorage.removeItem('accessToken');
+    firebase.auth().signOut();
+  };
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+  //check login
+  React.useEffect(() => {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (!user) {
+        navigate('/sign-in', { replace: true });
+      }
+    });
+  });
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -98,7 +115,9 @@ export default function PrimarySearchAppBar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Setting</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Log out</MenuItem>
+      <MenuItem onClick={(handleMenuClose, handleMenuSignOut)}>
+        Log out
+      </MenuItem>
     </Menu>
   );
 
@@ -185,8 +204,14 @@ export default function PrimarySearchAppBar() {
               />
             </Search>
           </Box>
-          <Box sx={{ color: `${color.gray[500]}`, width: '100%' }}>
+          <Box
+            sx={{
+              color: `${color.gray[500]}`,
+              width: '100%'
+            }}
+          >
             <IconsBar />
+            {/* <Tabs /> */}
           </Box>
           <Box sx={{ width: 400 }}>
             <Box

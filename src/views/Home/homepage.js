@@ -1,6 +1,8 @@
 import React from 'react';
-import AppBar from '../components/NavBar/AppBar';
-import Main from '../components/Main/Main';
+import { Routes, Route, Outlet, Link } from 'react-router-dom';
+
+import AppBar from '../../components/NavBar/AppBar';
+import Main from '../../components/Main/Main';
 import Box from '@mui/material/Box';
 
 const homepage = () => {

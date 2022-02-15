@@ -1,15 +1,11 @@
 import React from 'react';
 import './App.css';
-
-import Homepage from './views/homepage.js';
-import colors from './assets/style/GlobalStyles';
-
-const color = colors.colors;
+import Router from './router';
 
 function App() {
   return (
-    <div className="App" style={{backgroundColor: `${color.gray[100]}`}}>
-      <Homepage />
+    <div className="App">
+      <Router />
     </div>
   );
 }
