@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-
 import { Box } from '@mui/material';
+
 import SideBar from './SideBar/SideBar';
 import RightSideBar from './RightSideBar/RightSideBar';
 import colors from '../../assets/style/GlobalStyles';

@@ -2,6 +2,8 @@ import React from 'react';
 import Post from './Post';
 import { Box } from '@mui/material';
 
+import ShowCreatePost from '../../components/ShowCreatePost';
+
 const ListPost = () => {
   return (
     <Box
@@ -13,6 +15,7 @@ const ListPost = () => {
         paddingBottom: '20px'
       }}
     >
+      <ShowCreatePost />
       <Post />
       <Post />
       <Post />

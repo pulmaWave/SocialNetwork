@@ -14,55 +14,57 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate, Link } from 'react-router-dom';
 
-import firebase from '../config/firebase';
+import {
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged
+} from 'firebase/auth';
+import { auth, provider } from '../config/firebase';
 
 const theme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
 
-  const handlerGoogleSignIn = () => {
-    const googleProvider = new firebase.auth.GoogleAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(googleProvider)
-      .then((res) => {
-        console.log(res);
+  const googleHandler = async () => {
+    provider.setCustomParameters({ prompt: 'select_account' });
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        console.log(credential);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        console.log(result);
+        // redux action? --> dispatch({ type: SET_USER, user });
+        localStorage.setItem('token', token);
+        navigate('/', { replace: true });
       })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const handlerFacebookSignIn = () => {
-    const facebookProvider = new firebase.auth.FacebookAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(facebookProvider)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
       });
   };
 
   React.useEffect(() => {
-    // const accessToken = localStorage.getItem('accessToken');
-
-    firebase.auth().onAuthStateChanged((user) => {
+    auth.onAuthStateChanged((user) => {
       if (user) {
-        localStorage.setItem('accessToken', user.multiFactor.user.accessToken);
         navigate('/', { replace: true });
       }
     });
   });
 
   React.useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-
-    if (accessToken !== null) {
-      console.log('accessToken', accessToken);
+    const token = localStorage.getItem('token');
+    if (token !== null) {
+      console.log('token', token);
       navigate('/', { replace: true });
       console.log(window.location.href);
     }
@@ -138,17 +140,9 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 2, mb: 2 }}
-              onClick={handlerGoogleSignIn}
+              onClick={googleHandler}
             >
               Sign in with google
-            </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{ mt: 2, mb: 2 }}
-              onClick={handlerFacebookSignIn}
-            >
-              Sign in with facebook
             </Button>
             <Grid container>
               <Grid item xs>

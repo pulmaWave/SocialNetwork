@@ -46,7 +46,12 @@ const Post = () => {
           nhận kịch bản.
         </Typography>
         <Box>
-          <img src={film} alt="Mortal Kombat poster" width={'600px'} />
+          <img
+            src={film}
+            alt="Mortal Kombat poster"
+            width={'600px'}
+            style={{ cursor: 'pointer' }}
+          />
         </Box>
       </Box>
       <Box sx={{ p: '0 20px' }}>

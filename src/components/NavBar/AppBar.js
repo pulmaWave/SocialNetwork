@@ -17,7 +17,8 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import IconsBar from '../../theme/IconsBar';
 import { useNavigate } from 'react-router-dom';
-import firebase from '../../config/firebase';
+import { auth } from '../../config/firebase';
+import { signOut } from 'firebase/auth';
 
 // import Tabs from '../Tabs';
 import colors from '../../assets/style/GlobalStyles';
@@ -81,21 +82,29 @@ export default function PrimarySearchAppBar() {
   };
 
   const handleMenuSignOut = () => {
-    localStorage.removeItem('accessToken');
-    firebase.auth().signOut();
+    localStorage.removeItem('token');
+    signOut(auth)
+      .then(() => {
+        console.log('logged out');
+        navigate('/sign-in');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
+
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token === null) {
+      console.log('token', token);
+      navigate('/sign-in', { replace: true });
+      console.log(window.location.href);
+    }
+  });
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-  //check login
-  React.useEffect(() => {
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (!user) {
-        navigate('/sign-in', { replace: true });
-      }
-    });
-  });
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
