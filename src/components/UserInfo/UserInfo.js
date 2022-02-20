@@ -1,8 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import avatar from '../../assets/images/avt.jpg';
 import { Box, Typography } from '@mui/material';
 
 const UserInfo = () => {
+  const displayName = localStorage.getItem('userName');
   return (
     <Box sx={{ marginBottom: '10px' }}>
       <Box
@@ -42,7 +43,7 @@ const UserInfo = () => {
             }
           }}
         >
-          Nguyen Cong Thinh
+          {displayName ? displayName : 'User name is loading'}
         </Typography>
       </Box>
     </Box>

@@ -13,18 +13,18 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  onAuthStateChanged
-} from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../config/firebase';
+
+import { getUser } from '../redux/action/userAction';
 
 const theme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const googleHandler = async () => {
     provider.setCustomParameters({ prompt: 'select_account' });
@@ -32,41 +32,28 @@ export default function SignIn() {
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        console.log(credential);
+        console.log('credential', credential);
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        console.log(result);
-        // redux action? --> dispatch({ type: SET_USER, user });
+        console.log('result', result);
+        // save data to localStorage
+        localStorage.setItem('userName', user.displayName);
+        console.log('user info', user);
         localStorage.setItem('token', token);
         navigate('/', { replace: true });
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+        console.log(error.message);
       });
   };
 
   React.useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        navigate('/', { replace: true });
-      }
-    });
-  });
-
-  React.useEffect(() => {
     const token = localStorage.getItem('token');
     if (token !== null) {
-      console.log('token', token);
+      console.log('token page  signIn', token);
       navigate('/', { replace: true });
-      console.log(window.location.href);
     }
   });
 

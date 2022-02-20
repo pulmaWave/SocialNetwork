@@ -1,10 +1,4 @@
-const user = {
-  id: 0,
-  email: '',
-  phone: '',
-  name: '',
-  username: ''
-};
+const user = [];
 
 export const userReducer = (state = user, action) => {
   switch (action.type) {

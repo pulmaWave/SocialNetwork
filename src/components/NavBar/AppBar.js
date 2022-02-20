@@ -98,7 +98,6 @@ export default function PrimarySearchAppBar() {
     if (token === null) {
       console.log('token', token);
       navigate('/sign-in', { replace: true });
-      console.log(window.location.href);
     }
   });
 

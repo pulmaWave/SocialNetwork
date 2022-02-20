@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -23,6 +24,10 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
-console.log(db);
+const storage = getStorage();
+// .file config
+const metadata = {
+  contentType: 'image/jpeg'
+};
 provider.setCustomParameters({ prompt: 'select_account' });
-export { db, auth, provider };
+export { db, auth, provider, storage, ref, uploadBytes, getDownloadURL , metadata };

@@ -10,7 +10,6 @@ const ShowCreatePost = () => {
     <Box
       sx={{
         display: 'flex',
-        width: '600px',
         border: `${color.colors.gray[100]} 1px solid`,
         borderRadius: '5px',
         p: '10px',
@@ -23,9 +22,9 @@ const ShowCreatePost = () => {
           src={userImg}
           alt="user images"
           style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '50px',
+            width: '50px',
+            height: '50px',
+            borderRadius: '100%',
             display: 'flex',
             objectFit: 'cover'
           }}

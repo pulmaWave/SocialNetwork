@@ -1,9 +1,10 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-
 import avatar from '../assets/images/avt.jpg';
 
 const UserPost = () => {
+  const displayName = localStorage.getItem('userName');
+
   return (
     <Box sx={{ display: 'flex', alignItems: 'center' }}>
       <Box
@@ -22,8 +23,8 @@ const UserPost = () => {
             borderRadius: '50%',
             display: 'flex',
             objectFit: 'cover',
-            width: '42px',
-            height: '42px'
+            width: '50px',
+            height: '50px'
           }}
         />
       </Box>
@@ -39,7 +40,7 @@ const UserPost = () => {
             }
           }}
         >
-          Nguyen Cong Thinh
+          {displayName ? displayName : 'User name is loading'}
         </Typography>
         <Typography variant="subtitle2" component="div">
           10 hours ago
