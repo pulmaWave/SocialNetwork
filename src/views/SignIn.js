@@ -13,18 +13,14 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../config/firebase';
-
-import { getUser } from '../redux/action/userAction';
 
 const theme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const googleHandler = async () => {
     provider.setCustomParameters({ prompt: 'select_account' });
@@ -38,7 +34,7 @@ export default function SignIn() {
         const user = result.user;
         console.log('result', result);
         // save data to localStorage
-        localStorage.setItem('userName', user.displayName);
+        localStorage.setItem('userName', user.displayName.toLowerCase());
         console.log('user info', user);
         localStorage.setItem('token', token);
         navigate('/', { replace: true });

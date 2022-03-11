@@ -9,7 +9,7 @@ const RightSideBar = () => {
   return (
     <Box
       sx={{
-        p: '40px 20px 10px 80px',
+        p: '40px 0 10px 40px',
         height: 'calc(100vh - 112px)',
         overflow: 'auto',
         visibility: 'hidden',

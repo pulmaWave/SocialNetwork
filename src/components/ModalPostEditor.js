@@ -1,10 +1,15 @@
 import * as React from 'react';
+import * as dayjs from 'dayjs';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
+import { useDispatch } from 'react-redux';
+import { addIdPost, addOnePost } from '../redux/action/actions';
+import { doc, getDoc } from 'firebase/firestore';
 
 import { collection, addDoc } from 'firebase/firestore';
 import {
@@ -17,6 +22,14 @@ import {
 import color from '../assets/style/GlobalStyles';
 import UserInfo from '../components/UserInfo/UserInfo';
 
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      md: 650
+    }
+  }
+});
 const style = {
   position: 'absolute',
   top: '50%',
@@ -28,7 +41,11 @@ const style = {
   minHeight: '400px',
   outline: 'none',
   borderRadius: '7px',
-  p: '10px'
+  p: '10px',
+  [theme.breakpoints.down('md')]: {
+    width: '100vw',
+    height: '100vh'
+  }
 };
 
 const buttonModal = {
@@ -88,6 +105,7 @@ export default function KeepMountedModal() {
   const [isContent, setIsContent] = React.useState('');
   const [selectedImage, setSelectedImage] = React.useState(null);
   const [imageUrl, setImageUrl] = React.useState(null);
+  const dispatch = useDispatch();
 
   //Display a preview of the image using the URL object
   React.useEffect(() => {
@@ -122,44 +140,69 @@ export default function KeepMountedModal() {
     );
   };
 
+  // get one post from firestore
+  const getPost = async (id) => {
+    const noteSnapshot = await getDoc(doc(db, 'posts', id));
+    if (noteSnapshot.exists()) {
+      return noteSnapshot.data();
+    } else {
+      console.log("Note doesn't exist");
+    }
+  };
+  // add post to firestore
+  const addPost = (imgUrl) => {
+     try {
+       // add data to firestore
+       addDoc(collection(db, 'posts'), {
+         content: {isContent},
+         tag: 'travel',
+         imageUrl: imgUrl ? { url: imgUrl } : ''
+       }).then(async (res) => {
+         console.log('Post with id: ', res.id);
+         const newPost = await getPost(res.id);
+         dispatch(addOnePost({ id: res.id, ...newPost }));
+         //console.log('addIdPost action: ', addIdPost(res.id));
+       });
+     } catch (err) {
+       alert(err);
+     }
+  }
+
   /* function to add new task to firestore */
   const handleSubmit = (e) => {
+    handleClose();
     e.preventDefault();
-    const storageRef = ref(storage, `${selectedImage.name}`);
-    // 'file' comes from the Blob or File API
-    uploadBytes(storageRef, selectedImage).then(() => {
-      // uploaded success
-      console.log('Uploaded a blob or file!');
-      getDownloadURL(ref(storage, `${selectedImage.name}`))
-        .then((url) => {
-          // `url` is the download URL for `${selectedImage.name}`
+    // post with image
+    if (selectedImage) {
+      const storageRef = ref(storage, `${selectedImage.name}`);
+      // 'file' comes from the Blob or File API
+      uploadBytes(storageRef, selectedImage).then(() => {
+        // uploaded success
+        console.log('Uploaded a blob or file!');
+        getDownloadURL(ref(storage, `${selectedImage.name}`))
+          .then((url) => {
+            // `url` is the download URL for `${selectedImage.name}`
+            // This can be downloaded directly:
+            const xhr = new XMLHttpRequest();
+            xhr.responseType = 'blob';
+            // xhr.onload = (event) => {
+            //   const blob = xhr.response;
+            // };
+            xhr.open('GET', url);
+            // send request get url from storage
+            xhr.send();
+            console.log('url from storage:  ', url);
+            addPost(url)
+          })
+          .catch((error) => {
+            // Handle any errors
+          });
+      });
+    } else {
+      addPost('');
+    }
 
-          // This can be downloaded directly:
-          const xhr = new XMLHttpRequest();
-          xhr.responseType = 'blob';
-          xhr.onload = (event) => {
-            const blob = xhr.response;
-          };
-          xhr.open('GET', url);
-          // send request get url from storage
-          xhr.send();
-          console.log('url from storage:  ', url);
-          try {
-            // add data to firestore
-            addDoc(collection(db, 'posts', 'all', 'something'), {
-              content: { isContent },
-              tag: 'travel',
-              imageUrl: { imageUrl },
-              url: { url }
-            });
-          } catch (err) {
-            alert(err);
-          }
-        })
-        .catch((error) => {
-          // Handle any errors
-        });
-    });
+    
   };
 
   return (
@@ -167,72 +210,74 @@ export default function KeepMountedModal() {
       <Button onClick={handleOpen} sx={buttonModal}>
         Hi There, what is going on here?
       </Button>
-      <Modal keepMounted open={open} onClose={handleClose}>
-        <Box sx={style}>
-          <Box>
-            <Typography
-              component="div"
-              variant="h5"
+      <ThemeProvider theme={theme}>
+        <Modal keepMounted open={open} onClose={handleClose}>
+          <Box sx={style}>
+            <Box>
+              <Typography
+                component="div"
+                variant="h5"
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  borderBottom: `1px solid ${color.colors.gray[400]}`,
+                  fontWeight: 'bold',
+                  p: '10px 0',
+                  marginBottom: 2
+                }}
+              >
+                Create post
+              </Typography>
+            </Box>
+            <UserInfo />
+            <Box
+              component="form"
               sx={{
                 display: 'flex',
-                justifyContent: 'center',
-                borderBottom: `1px solid ${color.colors.gray[400]}`,
-                fontWeight: 'bold',
-                p: '10px 0',
-                marginBottom: 2
+                flexDirection: 'column',
+                alignItems: 'center',
+                objectFit: 'content',
+                maxHeight: 300,
+                overflowX: 'hidden',
+                overflowY: 'scroll',
+                '& .MuiTextField-root': { m: 1, width: '100%' }
               }}
+              noValidate
+              autoComplete="off"
             >
-              Create post
-            </Typography>
-          </Box>
-          <UserInfo />
-          <Box
-            component="form"
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              objectFit: 'content',
-              height: 300,
-              overflowX: 'hidden',
-              overflowY: 'scroll',
-              '& .MuiTextField-root': { m: 1, width: '100%' }
-            }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField
-              id="outlined-multiline-static"
-              multiline
-              rows={4}
-              placeholder="What is going on here?"
-              onChange={(event) => {
-                setIsContent(event.target.value);
-              }}
-              sx={{
-                outline: 'none',
-                border: 'none',
-                '&hover:': {
-                  outline: 'none'
-                }
-              }}
-            />
-            {imageUrl && selectedImage && (
-              <Box mt={2} textAlign="center">
-                <img src={imageUrl} alt={selectedImage.name} height="300px" />
-              </Box>
+              <TextField
+                id="outlined-multiline-static"
+                multiline
+                rows={4}
+                placeholder="What is going on here?"
+                onChange={(event) => {
+                  setIsContent(event.target.value);
+                }}
+                sx={{
+                  outline: 'none',
+                  border: 'none',
+                  '&hover:': {
+                    outline: 'none'
+                  }
+                }}
+              />
+              {imageUrl && selectedImage && (
+                <Box mt={2} textAlign="center">
+                  <img src={imageUrl} alt={selectedImage.name} height="300px" />
+                </Box>
+              )}
+            </Box>
+            <Assignment />
+            {isContent || (imageUrl && selectedImage) ? (
+              <Button fullWidth sx={buttonPost} onClick={handleSubmit}>
+                Post
+              </Button>
+            ) : (
+              <button style={buttonPostDisable}>Post</button>
             )}
           </Box>
-          <Assignment />
-          {isContent ? (
-            <Button fullWidth sx={buttonPost} onClick={handleSubmit}>
-              Post
-            </Button>
-          ) : (
-            <button style={buttonPostDisable}>Post</button>
-          )}
-        </Box>
-      </Modal>
+        </Modal>
+      </ThemeProvider>
     </div>
   );
 }

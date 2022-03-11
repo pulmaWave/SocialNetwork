@@ -1,5 +1,4 @@
 import React from 'react';
-import { Routes, Route, Outlet, Link } from 'react-router-dom';
 
 import AppBar from '../../components/NavBar/AppBar';
 import Main from '../../components/Main/Main';
@@ -8,7 +7,7 @@ import Box from '@mui/material/Box';
 const homepage = () => {
   return (
     <Box>
-      <Box sx={{ marginBottom: '80px' }}>
+      <Box sx={{ marginBottom: '65px' }}>
         <AppBar />
       </Box>
       <Box>

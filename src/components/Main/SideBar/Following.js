@@ -13,8 +13,8 @@ const Following = () => {
     >
       <SupervisedUserCircleIcon
         sx={{
-          width: '40px',
-          height: '40px',
+          width: '32px',
+          height: '32px',
           marginRight: '10px',
           borderRadius: '50%',
           cursor: 'pointer',

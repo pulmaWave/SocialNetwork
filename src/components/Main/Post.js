@@ -1,30 +1,32 @@
 import React from 'react';
-// import { useState } from 'react';
 import { Box, Button } from '@mui/material';
 import { Typography } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import {
   LocalFireDepartment,
   Sms,
   WifiProtectedSetup
 } from '@mui/icons-material';
 
-import film from '../../assets/images/film.jpg';
 import UserPost from '../UserPost';
 import colors from '../../assets/style/GlobalStyles';
 
 const color = colors.colors;
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      xs: 0,
+      md: 650
+    }
+  }
+});
 
-const Post = () => {
-  // const [bgColor, setBgColor] = useState('');
-
-  // const handleClickButton = () => {
-  //   setBgColor(`${color.gray[400]}`);
-  // };
-
+const Post = ({ content, url }) => {
   return (
     <Box
       sx={{
-        width: 600,
+        maxWidth: 600,
         border: `${color.gray[100]} 1px solid`,
         borderRadius: '5px',
         paddingBottom: '10px',
@@ -32,27 +34,47 @@ const Post = () => {
         backgroundColor: `${color.white}`
       }}
     >
-      <Box sx={{ p: '10px', marginBottom: '10px' }}>
-        <UserPost />
-      </Box>
+      <ThemeProvider theme={theme}>
+        <Box
+          sx={{
+            p: '10px',
+            marginBottom: '10px'
+          }}
+        >
+          <UserPost />
+        </Box>
+      </ThemeProvider>
       <Box>
         <Typography
           variant="h6"
-          sx={{ marginBottom: '10px', padding: '0 10px' }}
+          component="div"
+          sx={{ marginBottom: '10px', padding: '0 10px', wordBreak: 'break-word' }}
         >
-          Dù doanh thu không được tốt cho lắm, chỉ với 83 triệu đô toàn cầu,
-          nhưng Warner Bros. vẫn tiếp tục cho thực hiện tiếp phần hậu truyện của
-          Mortal Kombat. Phần 2 này sẽ do biên kịch của series Moon Knight đảm
-          nhận kịch bản.
+          {content}
         </Typography>
-        <Box>
-          <img
-            src={film}
-            alt="Mortal Kombat poster"
-            width={'600px'}
-            style={{ cursor: 'pointer' }}
-          />
-        </Box>
+        {url && (
+          <ThemeProvider theme={theme}>
+            <Box
+              sx={{
+                borderTop: `0.5px solid ${color.gray[300]}`,
+                display: 'flex',
+                justifyContent: 'center',
+                [theme.breakpoints.down('md')]: {
+                  width: '100vw'
+                }
+              }}
+            >
+              <img
+                src={url}
+                alt="images"
+                style={{
+                  cursor: 'pointer',
+                  maxWidth: '550px'
+                }}
+              />
+            </Box>
+          </ThemeProvider>
+        )}
       </Box>
       <Box sx={{ p: '0 20px' }}>
         <Box

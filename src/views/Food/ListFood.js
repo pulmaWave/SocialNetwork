@@ -6,15 +6,14 @@ import { getDocs, collection, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import * as dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // import locale
-import { Dispatch } from 'react';
 
-const ListPostTravel = () => {
+const ListFood = () => {
   const [posts, setPosts] = useState([]);
   const [, setLoading] = useState(false);
-  const qTravel = query(collection(db, 'posts'), where('tag', '==', 'travel'));
+  const qFood = query(collection(db, 'posts'), where('tag', '==', 'food'));
   useEffect(() => {
     setLoading(true);
-    getDocs(qTravel).then((res) => {
+    getDocs(qFood).then((res) => {
       let arr = [];
       res.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
@@ -55,4 +54,4 @@ const ListPostTravel = () => {
   );
 };
 
-export default ListPostTravel;
+export default ListFood;

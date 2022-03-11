@@ -11,7 +11,7 @@ const SideBar = () => {
   return (
     <Box
       sx={{
-        p: '40px 20px 10px 20px',
+        p: '40px 20px 10px 0',
         height: 'calc(100vh - 112px)',
         overflow: 'auto',
         visibility: 'hidden',

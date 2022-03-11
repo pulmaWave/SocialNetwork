@@ -25,17 +25,18 @@ const UserInfo = () => {
             src={avatar}
             alt="profile images"
             style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '50px',
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
               display: 'flex',
               objectFit: 'cover'
             }}
           />
         </Box>
         <Typography
+          variant="body1"
           sx={{
-            fontWeight: 'bold',
+            textTransform: 'capitalize',
             marginLeft: '10px',
             cursor: 'pointer',
             ':hover': {

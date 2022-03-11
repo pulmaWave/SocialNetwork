@@ -264,10 +264,11 @@ export default function PrimarySearchAppBar() {
                 aria-controls={mobileMenuId}
                 aria-haspopup="true"
                 onClick={handleMobileMenuOpen}
-                color="inherit"
-                sx={{ fontSize: '40px' }}
+                sx={{ fontSize: '40px', color: `${color.gray[500]}` }}
               >
-                <MoreIcon sx={{ fontSize: '40px' }} />
+                <MoreIcon
+                  sx={{ fontSize: '40px', color: `${color.gray[500]}` }}
+                />
               </IconButton>
             </Box>
           </Box>

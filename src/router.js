@@ -3,7 +3,9 @@ import { useRoutes } from 'react-router-dom';
 
 import Homepage from './views/Home/homepage';
 import ListPostTravel from './views/Travel/ListPostTravel';
-import ListPost from './components/Main/ListPost';
+import ListPost from './views/Home/ListPost';
+import ListFood from './views/Food/ListFood';
+import ListBeauty from './views/Beauty/ListBeauty';
 import SignIn from './views/SignIn';
 import SignUp from './views/SignUp';
 // ----------------------------------------------------------------------
@@ -15,7 +17,9 @@ export default function Router() {
       element: <Homepage />,
       children: [
         { path: '/', element: <ListPost /> },
-        { path: 'travel', element: <ListPostTravel /> }
+        { path: 'travel', element: <ListPostTravel /> },
+        { path: 'food', element: <ListFood /> },
+        { path: 'beauty', element: <ListBeauty /> }
       ]
     },
     {

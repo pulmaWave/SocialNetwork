@@ -23,16 +23,17 @@ const UserPost = () => {
             borderRadius: '50%',
             display: 'flex',
             objectFit: 'cover',
-            width: '50px',
-            height: '50px'
+            width: '40px',
+            height: '40px'
           }}
         />
       </Box>
       <Box sx={{ marginLeft: '10px' }}>
         <Typography
-          variant="subtitle1"
+          variant="body1"
           component="div"
           sx={{
+            textTransform: 'capitalize',
             fontWeight: 'bold',
             cursor: 'pointer',
             ':hover': {

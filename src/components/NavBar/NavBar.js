@@ -20,7 +20,7 @@ const navbar = () => {
   return (
     <div
       style={{
-        height: '56px',
+        height: '100px',
         display: 'flex',
         alignItems: 'center',
         padding: '0 20px',
