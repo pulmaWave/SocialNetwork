@@ -102,6 +102,7 @@ const Input = styled('input')({
 });
 
 export default function KeepMountedModal() {
+  const textInput = React.useRef(null);
   const [isContent, setIsContent] = React.useState('');
   const [selectedImage, setSelectedImage] = React.useState(null);
   const [imageUrl, setImageUrl] = React.useState(null);
@@ -151,22 +152,23 @@ export default function KeepMountedModal() {
   };
   // add post to firestore
   const addPost = (imgUrl) => {
-     try {
-       // add data to firestore
-       addDoc(collection(db, 'posts'), {
-         content: {isContent},
-         tag: 'travel',
-         imageUrl: imgUrl ? { url: imgUrl } : ''
-       }).then(async (res) => {
-         console.log('Post with id: ', res.id);
-         const newPost = await getPost(res.id);
-         dispatch(addOnePost({ id: res.id, ...newPost }));
-         //console.log('addIdPost action: ', addIdPost(res.id));
-       });
-     } catch (err) {
-       alert(err);
-     }
-  }
+    try {
+      // add data to firestore
+      addDoc(collection(db, 'posts'), {
+        uid: localStorage.getItem('uid'),
+        content: { isContent },
+        tag: 'travel',
+        imageUrl: imgUrl ? { url: imgUrl } : ''
+      }).then(async (res) => {
+        console.log('Post with id: ', res.id);
+        const newPost = await getPost(res.id);
+        dispatch(addOnePost({ id: res.id, ...newPost }));
+        //console.log('addIdPost action: ', addIdPost(res.id));
+      });
+    } catch (err) {
+      alert(err);
+    }
+  };
 
   /* function to add new task to firestore */
   const handleSubmit = (e) => {
@@ -192,17 +194,22 @@ export default function KeepMountedModal() {
             // send request get url from storage
             xhr.send();
             console.log('url from storage:  ', url);
-            addPost(url)
+            // create a post width image (url of image)
+            addPost(url);
+            // clear content of post
+            setSelectedImage(null);
+            setImageUrl(null);
+            setIsContent('');
+            textInput.current.value = '';
           })
           .catch((error) => {
             // Handle any errors
           });
       });
     } else {
+      //create a post without image
       addPost('');
     }
-
-    
   };
 
   return (
@@ -237,9 +244,8 @@ export default function KeepMountedModal() {
                 flexDirection: 'column',
                 alignItems: 'center',
                 objectFit: 'content',
-                maxHeight: 300,
                 overflowX: 'hidden',
-                overflowY: 'scroll',
+                overflowY: 'hidden',
                 '& .MuiTextField-root': { m: 1, width: '100%' }
               }}
               noValidate
@@ -250,6 +256,7 @@ export default function KeepMountedModal() {
                 multiline
                 rows={4}
                 placeholder="What is going on here?"
+                inputRef={textInput}
                 onChange={(event) => {
                   setIsContent(event.target.value);
                 }}

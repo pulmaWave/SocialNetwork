@@ -28,14 +28,12 @@ export default function SignIn() {
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        console.log('credential', credential);
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        console.log('result', result);
         // save data to localStorage
         localStorage.setItem('userName', user.displayName.toLowerCase());
-        console.log('user info', user);
+        localStorage.setItem('uid', user.uid);
         localStorage.setItem('token', token);
         navigate('/', { replace: true });
       })

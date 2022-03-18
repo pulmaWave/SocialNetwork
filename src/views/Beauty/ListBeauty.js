@@ -35,7 +35,7 @@ const ListBeauty = () => {
         flexDirection: 'column',
         gap: 3,
         mt: '30px',
-        paddingBottom: '20px'
+        paddingBottom: '70px'
       }}
     >
       <CreatePost />

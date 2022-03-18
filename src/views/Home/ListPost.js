@@ -14,7 +14,6 @@ const ListPost = () => {
   const dispatch = useDispatch();
   // get list post from redux
   const listPosted = useSelector(listPostSelector)["items"] || [];
-  console.log('list post from redux: ', listPosted);
 
   useEffect(() => {
     setLoading(true);
@@ -28,7 +27,6 @@ const ListPost = () => {
         });
       });
       //send data to store redux
-      //console.log(arr)
       dispatch(addListPost(arr));
       setLoading(false);
     });
@@ -41,7 +39,7 @@ const ListPost = () => {
         flexDirection: 'column',
         gap: 3,
         mt: '30px',
-        paddingBottom: '20px'
+        paddingBottom: '70px'
       }}
     >
       <ShowCreatePost />
