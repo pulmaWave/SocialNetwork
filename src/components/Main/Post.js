@@ -17,7 +17,9 @@ const theme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
-      md: 650
+      mb: 480,
+      md: 650,
+      large: 1440
     }
   }
 });
@@ -32,10 +34,17 @@ const Post = ({ content, url }) => {
     <ThemeProvider theme={theme}>
       <Box
         sx={{
-          width: '90vw',
-          maxWidth: 600,
+          width: 600,
+          [theme.breakpoints.down('large')]: {
+            width: 500,
+            maxWidth: '90vw'
+          },
           border: `${color.gray[100]} 1px solid`,
           borderRadius: '5px',
+          [theme.breakpoints.down('mb')]: {
+            borderRadius: 'unset',
+            maxWidth: '99vw',
+          },
           paddingBottom: '10px',
           boxShadow: 1,
           backgroundColor: `${color.white}`
@@ -69,18 +78,17 @@ const Post = ({ content, url }) => {
                 sx={{
                   borderTop: `0.5px solid ${color.gray[300]}`,
                   display: 'flex',
-                  justifyContent: 'center',
-                  [theme.breakpoints.down('md')]: {
-                    width: '90vw'
-                  }
+                  justifyContent: 'center'
                 }}
               >
                 <img
                   src={url}
                   alt="images"
                   style={{
+                    display: 'flex',
+                    objectFit: 'contain',
                     cursor: 'pointer',
-                    maxWidth: '95%'
+                    maxWidth: '90%'
                   }}
                 />
               </Box>

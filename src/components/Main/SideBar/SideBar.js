@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 
 import UserInfo from '../../UserInfo/UserInfo';
-import Following from './Following';
+import Friend from './Friend';
 import Save from './Save';
 import ListAds from './ListAds';
 import colors from '../../../assets/style/GlobalStyles';
@@ -35,7 +35,7 @@ const SideBar = () => {
         <UserInfo />
       </Box>
       <Box sx={{ visibility: 'visible' }}>
-        <Following />
+        <Friend />
       </Box>
       <Box sx={{ visibility: 'visible' }}>
         <Save />

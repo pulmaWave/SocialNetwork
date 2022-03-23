@@ -1,9 +1,19 @@
 import { Box } from '@mui/material';
 import React from 'react';
 import ModalPostEditor from './ModalPostEditor';
+import { createTheme } from '@mui/material/styles';
 
 import userImg from '../assets/images/avt.jpg';
 import color from '../assets/style/GlobalStyles';
+
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      mb: 480,
+      md: 900
+    }
+  }
+});
 
 const ShowCreatePost = () => {
   return (
@@ -12,6 +22,10 @@ const ShowCreatePost = () => {
         display: 'flex',
         border: `${color.colors.gray[100]} 1px solid`,
         borderRadius: '5px',
+        [theme.breakpoints.down('mb')]: {
+          borderRadius: 'unset',
+          height: '40px'
+        },
         p: '10px',
         boxShadow: 1,
         backgroundColor: `${color.colors.white}`

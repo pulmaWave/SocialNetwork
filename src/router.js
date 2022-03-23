@@ -8,6 +8,7 @@ import ListFood from './views/Food/ListFood';
 import ListBeauty from './views/Beauty/ListBeauty';
 import SignIn from './views/SignIn';
 import SignUp from './views/SignUp';
+import Messages from './views/Messages';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -27,8 +28,12 @@ export default function Router() {
       element: <SignIn />
     },
     {
+      path: '/messages',
+      element: <Messages />
+    },
+    {
       path: '/sign-up',
       element: <SignUp />
-    }
+    },
   ]);
 }

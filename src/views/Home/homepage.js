@@ -1,9 +1,21 @@
 import React from 'react';
-
 import AppBar from '../../components/NavBar/AppBar';
 import Main from '../../components/Main/Main';
-import IconBar from '../../theme/IconsBar';
+import IconsBar from '../../theme/IconsBar';
 import Box from '@mui/material/Box';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import colors from '../../assets/style/GlobalStyles';
+
+const color = colors.colors;
+
+const theme = createTheme({
+  breakpoints: {
+    values: {
+      mb: 480,
+      md: 900
+    }
+  }
+});
 
 const homepage = () => {
   return (
@@ -14,23 +26,26 @@ const homepage = () => {
       <Box>
         <Main />
       </Box>
-      <Box
-        sx={{
-          position: 'fixed',
-          bottom: 0,
-          right: 0,
-          left: 0
-        }}
-      >
+      <ThemeProvider theme={theme}>
         <Box
           sx={{
+            boxShadow:' 0 -1px 1px -1px gray',
+            boxSizing: 'border-box',
+            width: '100%',
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            display: 'none',
             backgroundColor: 'white',
-            display: { xs: 'block', md: 'none' }
+            justifyContent: 'center',
+            [theme.breakpoints.down('mb')]: {
+              display: 'flex'
+            }
           }}
         >
-          <IconBar />
+          <IconsBar color={`${color.sky[800]}`} />
         </Box>
-      </Box>
+      </ThemeProvider>
     </Box>
   );
 };

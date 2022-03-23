@@ -2,14 +2,15 @@ import * as React from 'react';
 import avatar from '../../assets/images/avt.jpg';
 import { Box, Typography } from '@mui/material';
 
-const UserInfo = () => {
+const UserInfo = (props) => {
   const displayName = localStorage.getItem('userName');
   return (
     <Box sx={{ marginBottom: '10px' }}>
       <Box
         sx={{
           display: 'flex',
-          alignItems: 'center'
+          alignItems: 'center',
+          paddingLeft: props.paddingLeft ? props.paddingLeft : ''
         }}
       >
         <Box

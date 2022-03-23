@@ -3,6 +3,8 @@ import * as dayjs from 'dayjs';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import { IconButton } from '@mui/material';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TextField from '@mui/material/TextField';
 import { Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -26,6 +28,7 @@ const theme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
+      mb: 480,
       md: 650
     }
   }
@@ -37,14 +40,18 @@ const style = {
   transform: 'translate(-50%, -50%)',
   bgcolor: `${color.colors.white}`,
   boxShadow: 24,
-  minWidth: '600px',
+  minWidth: '480px',
   minHeight: '400px',
   outline: 'none',
   borderRadius: '7px',
   p: '10px',
   [theme.breakpoints.down('md')]: {
-    width: '100vw',
-    height: '100vh'
+    height: '98vh'
+  },
+  [theme.breakpoints.down('mb')]: {
+    width: '96vw',
+    minWidth: 'unset',
+    minHeight: 'unset'
   }
 };
 
@@ -67,7 +74,7 @@ const buttonModal = {
 const buttonPost = {
   fontSize: '16px',
   fontWeight: 'bold',
-  width: '100%',
+  width: '96%',
   bgcolor: `${color.colors.blue[500]}`,
   padding: '10px',
   borderRadius: '5px',
@@ -79,13 +86,17 @@ const buttonPost = {
   color: `${color.colors.white}`,
   ':hover': {
     bgcolor: `${color.colors.blue[500]}`
-  }
+  },
+  position: 'absolute',
+  left: '-46%',
+  bottom: 0,
+  transform: `translate(${50}%, ${-50}%)`
 };
 
 const buttonPostDisable = {
   fontSize: '16px',
   fontWeight: 'bold',
-  width: '100%',
+  width: '96%',
   color: `${color.colors.gray[400]}`,
   bgcolor: `${color.colors.gray[200]}`,
   padding: '10px',
@@ -94,8 +105,34 @@ const buttonPostDisable = {
   border: 'none',
   textAlign: 'center',
   cursor: 'not-allowed',
-  marginTop: 'auto'
+  marginTop: 'auto',
+  position: 'absolute',
+  left: '-46%',
+  bottom: 0,
+  transform: `translate(${50}%, ${-50}%)`
 };
+
+const btnModalClose = {
+  position: 'absolute',
+  top: '10px',
+  right: '10px',
+  width: '30px',
+  height: '30px',
+  borderRadius: '50%',
+  cursor: 'pointer',
+  backgroundColor: `${color.colors.gray[200]}`,
+  ':hover': {
+    backgroundColor: `${color.colors.gray[700]}`
+  }
+};
+
+// handle hover button create post
+function MouseOVer(event) {
+  event.target.style.background = `${color.colors.gray[400]}`;
+}
+function MouseOut(event) {
+  event.target.style.background = `${color.colors.gray[200]}`;
+}
 
 const Input = styled('input')({
   display: 'none'
@@ -114,13 +151,11 @@ export default function KeepMountedModal() {
       setImageUrl(URL.createObjectURL(selectedImage));
     }
   }, [selectedImage]);
+
+  // handle open, close create post
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  // upload file to storage
-  // const storageRef = ref(storage, `images/${selectedImage.name}`);
-  // const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
   const Assignment = () => {
     return (
@@ -133,7 +168,7 @@ export default function KeepMountedModal() {
             type="file"
             onChange={(e) => setSelectedImage(e.target.files[0])}
           />
-          <Button variant="contained" component="span">
+          <Button variant="contained" component="span" sx={{ marginBottom: 1 }}>
             Image
           </Button>
         </label>
@@ -209,18 +244,24 @@ export default function KeepMountedModal() {
     } else {
       //create a post without image
       addPost('');
+      // clear content of post
+      setIsContent('');
+      textInput.current.value = '';
     }
   };
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
       <Button onClick={handleOpen} sx={buttonModal}>
-        Hi There, what is going on here?
+        How are you today?
       </Button>
       <ThemeProvider theme={theme}>
         <Modal keepMounted open={open} onClose={handleClose}>
           <Box sx={style}>
             <Box>
+              {/* <IconButton open={open} onClick={handleClose}>
+                <ChevronLeftIcon />
+              </IconButton> */}
               <Typography
                 component="div"
                 variant="h5"
@@ -229,14 +270,23 @@ export default function KeepMountedModal() {
                   justifyContent: 'center',
                   borderBottom: `1px solid ${color.colors.gray[400]}`,
                   fontWeight: 'bold',
-                  p: '10px 0',
+                  pb: '10px',
                   marginBottom: 2
                 }}
               >
                 Create post
               </Typography>
+              <button
+                open={open}
+                onClick={handleClose}
+                style={btnModalClose}
+                onMouseOver={MouseOVer}
+                onMouseOut={MouseOut}
+              >
+                X
+              </button>
             </Box>
-            <UserInfo />
+            <UserInfo paddingLeft={'10px'} />
             <Box
               component="form"
               sx={{

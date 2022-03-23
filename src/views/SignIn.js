@@ -16,21 +16,101 @@ import { useNavigate, Link } from 'react-router-dom';
 
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../config/firebase';
+import {
+  doc,
+  getDoc,
+  getDocs,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  where
+} from 'firebase/firestore';
+import { db } from '../config/firebase';
 
 const theme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
 
-  const googleHandler = async () => {
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token !== null) {
+      console.log('token page  signIn', token);
+      navigate('/', { replace: true });
+    }
+  });
+
+  const addUser = (uid) => {
+    try {
+      // add data to firestore
+      addDoc(collection(db, 'users'), {
+        uid: uid,
+        email: '',
+        password: '',
+        image: ''
+      }).then(async (res) => {
+        console.log('uid: ', res.id);
+      });
+    } catch (err) {
+      alert(err);
+    }
+  };
+
+  // get UserId from firestore
+  const getUserId = async (uid) => {
+    let arr = [];
+    try {
+      // const data = await getDocs(
+      //   query(collection(db, 'users'), where('uid', '==', uid))
+      // );
+      //   console.log('data ', data)
+
+      return await getDocs(collection(db, 'users')).then((res) => {
+        let arr = [];
+        res.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          arr.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        console.log('arr: ', arr);
+        return arr;
+      });
+
+      // if (data) {
+      //   data.forEach((doc) => {
+      //     // arr.push({
+      //     //   id: doc.id,
+      //     //   ...doc.data()
+      //     // });
+      //     console.log('doc.data(): ', doc.data());
+      //   });
+      //   console.log('arr: ', arr);
+      //   // return arr;
+      // }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  async function googleHandler() {
     provider.setCustomParameters({ prompt: 'select_account' });
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
+        const userExist = await getUserId(user.uid);
+        console.log('user exist: ', userExist);
+        if (user.uid !== userExist[0].uid) {
+          addUser(user.uid);
+        } else {
+          console.log('user exist');
+        }
         // save data to localStorage
         localStorage.setItem('userName', user.displayName.toLowerCase());
         localStorage.setItem('uid', user.uid);
@@ -41,15 +121,7 @@ export default function SignIn() {
         // Handle Errors here.
         console.log(error.message);
       });
-  };
-
-  React.useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token !== null) {
-      console.log('token page  signIn', token);
-      navigate('/', { replace: true });
-    }
-  });
+  }
 
   function handleSubmit(event) {
     event.preventDefault();

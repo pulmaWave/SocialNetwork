@@ -2,7 +2,7 @@ import React from 'react';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import { Box, Typography } from '@mui/material';
 
-const Following = () => {
+const Friend = () => {
   return (
     <Box
       sx={{
@@ -31,10 +31,10 @@ const Following = () => {
           }
         }}
       >
-        Following
+        Friend
       </Typography>
     </Box>
   );
 };
 
-export default Following;
+export default Friend;

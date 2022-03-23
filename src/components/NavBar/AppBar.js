@@ -12,13 +12,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import IconsBar from '../../theme/IconsBar';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../../config/firebase';
 import { signOut } from 'firebase/auth';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import SearchModal from '../../components/SearchModal';
 
 // import Tabs from '../Tabs';
 import colors from '../../assets/style/GlobalStyles';
@@ -27,6 +27,7 @@ const color = colors.colors;
 const theme = createTheme({
   breakpoints: {
     values: {
+      mb: 480,
       w600: 600,
       md: 900,
       menu: 1150
@@ -54,7 +55,6 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center'
 }));
-
 
 export default function PrimarySearchAppBar() {
   const navigate = useNavigate();
@@ -127,170 +127,128 @@ export default function PrimarySearchAppBar() {
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
-  // const renderMobileMenu = (
-  //   <Menu
-  //     anchorEl={mobileMoreAnchorEl}
-  //     anchorOrigin={{
-  //       vertical: 'top',
-  //       horizontal: 'right'
-  //     }}
-  //     id={mobileMenuId}
-  //     keepMounted
-  //     transformOrigin={{
-  //       vertical: 'top',
-  //       horizontal: 'right'
-  //     }}
-  //     open={isMobileMenuOpen}
-  //     onClose={handleMobileMenuClose}
-  //   >
-  //     <MenuItem>
-  //       <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-  //         <Badge badgeContent={4} color="error">
-  //           <MailIcon sx={{ width: '40px', height: '40px' }} />
-  //         </Badge>
-  //       </IconButton>
-  //       <p>Messages</p>
-  //     </MenuItem>
-  //     <MenuItem>
-  //       <IconButton
-  //         size="large"
-  //         aria-label="show 17 new notifications"
-  //         color="inherit"
-  //       >
-  //         <Badge badgeContent={17} color="error">
-  //           <NotificationsIcon />
-  //         </Badge>
-  //       </IconButton>
-  //       <p>Notifications</p>
-  //     </MenuItem>
-  //     <MenuItem onClick={handleProfileMenuOpen}>
-  //       <IconButton
-  //         size="large"
-  //         aria-label="account of current user"
-  //         aria-controls="primary-search-account-menu"
-  //         aria-haspopup="true"
-  //         color="inherit"
-  //       >
-  //         <AccountCircle />
-  //       </IconButton>
-  //       <p>Profile</p>
-  //     </MenuItem>
-  //   </Menu>
-  // );
 
   return (
     <Box>
       <AppBar sx={{ backgroundColor: `${color.white}` }}>
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Toolbar
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            bgcolor: `${color.sky[800]}`
+          }}
+        >
           <Box sx={{ display: 'flex', alignItems: 'center', width: '400px' }}>
-            <IconButton
-              size="large"
-              edge="start"
-              color="primary"
-              aria-label="open drawer"
-              sx={{ mr: 2, color: `${color.gray[500]}` }}
-            >
-              <MenuIcon />
-            </IconButton>
             <ThemeProvider theme={theme}>
-              <Search
+              <IconButton
+                size="medium"
+                edge="start"
+                color="primary"
+                aria-label="open drawer"
                 sx={{
-                  borderRadius: 5,
-                  color: `${color.gray[500]}`,
-                  backgroundColor: `${color.gray[100]}`
+                  mr: 2,
+                  color: `${color.white}`,
+                  [theme.breakpoints.down('mb')]: {
+                    mr: 'unset'
+                  }
                 }}
               >
-                <SearchIconWrapper sx={{ left: 0, right: 0 }}>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <Button
-                  sx={{
-                    width: 'inherit',
-                    borderRadius: 5,
-                    padding: '10px 20px 25px 20px',
-                  }}
-                />
-              </Search>
+                <MenuIcon />
+              </IconButton>
+            </ThemeProvider>
+            <ThemeProvider theme={theme}>
+              <Box sx={{ width: '100%' }}>
+                <SearchModal />
+              </Box>
             </ThemeProvider>
           </Box>
           <Box
             sx={{
               color: `${color.gray[500]}`,
               width: '100%',
-              display: { xs: 'none', md: 'block' }
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'center'
             }}
           >
-            <IconsBar />
-            {/* <Tabs /> */}
+            <IconsBar color={`${color.white}`} />
           </Box>
-          <Box sx={{ width: 400 }}>
+          <ThemeProvider theme={theme}>
             <Box
               sx={{
-                display: 'flex',
-                justifyContent: 'flex-end'
+                width: 400,
+                [theme.breakpoints.down('mb')]: {
+                  width: 'fit-content'
+                }
               }}
             >
-              <IconButton
-                size="large"
-                aria-label="show 4 new mails"
-                color="primary"
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end'
+                }}
               >
-                <Badge badgeContent={4} color="error">
-                  <MailIcon
-                    fontSize="large"
-                    sx={{ color: `${color.gray[500]}` }}
+                <IconButton
+                  size="medium"
+                  aria-label="show 4 new mails"
+                  color="primary"
+                >
+                  <Badge badgeContent={4} color="error">
+                    <Link to="/messages" style={{ display: 'flex' }}>
+                      <MailIcon
+                        fontSize="medium"
+                        sx={{ color: `${color.white}` }}
+                      />
+                    </Link>
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  size="medium"
+                  aria-label="show 17 new notifications"
+                  color="primary"
+                >
+                  <Badge badgeContent={17} color="error">
+                    <Link to="/notification" style={{ display: 'flex' }}>
+                      <NotificationsIcon
+                        fontSize="medium"
+                        sx={{ color: `${color.white}` }}
+                      />
+                    </Link>
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  size="medium"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="primary"
+                >
+                  <KeyboardArrowDownIcon
+                    fontSize="medium"
+                    sx={{ color: `${color.white}` }}
                   />
-                </Badge>
-              </IconButton>
-              <IconButton
-                size="large"
-                aria-label="show 17 new notifications"
-                color="primary"
-              >
-                <Badge badgeContent={17} color="error">
-                  <NotificationsIcon
-                    fontSize="large"
-                    sx={{ color: `${color.gray[500]}` }}
-                  />
-                </Badge>
-              </IconButton>
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="primary"
-              >
-                <KeyboardArrowDownIcon
-                  fontSize="large"
-                  sx={{ color: `${color.gray[500]}` }}
-                />
-              </IconButton>
+                </IconButton>
+              </Box>
             </Box>
-            <Box
-              sx={{
-                display: { xs: 'none', md: 'none' },
-                justifyContent: 'end'
-              }}
-            >
-              <IconButton
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                sx={{ fontSize: '40px', color: `${color.gray[500]}` }}
-              >
-                <MoreIcon
-                  sx={{ fontSize: '40px', color: `${color.gray[500]}` }}
-                />
-              </IconButton>
-            </Box>
-          </Box>
+          </ThemeProvider>
         </Toolbar>
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            display: { xs: 'none', md: 'none' },
+            [theme.breakpoints.down('md')]: {
+              display: 'flex'
+            },
+            [theme.breakpoints.down('mb')]: {
+              display: 'none'
+            },
+            justifyContent: 'center'
+          }}
+        >
+          <IconsBar color={`${color.sky[800]}`} />
+        </Box>
       </AppBar>
-      {/* {renderMobileMenu} */}
       {renderMenu}
     </Box>
   );

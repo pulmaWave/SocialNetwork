@@ -12,8 +12,9 @@ const theme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
+      mb: 480,
       rightBarNone: 950,
-      sideBarNone: 1230,
+      sideBarNone: 1230
     }
   }
 });
@@ -30,11 +31,16 @@ const main = () => {
             justifyContent: 'space-between'
           },
           padding: '0 30px ',
+          [theme.breakpoints.down('mb')]: {
+            padding: 'unset'
+          },
           backgroundColor: `${color.gray[100]}`
         }}
       >
         <ThemeProvider theme={theme}>
-          <Box sx={{ display: { xs: 'none', sideBarNone: 'block', width: 300 } }}>
+          <Box
+            sx={{ display: { xs: 'none', sideBarNone: 'block', width: 300 } }}
+          >
             <Box sx={{ position: 'fixed', width: 'inherit' }}>
               <SideBar />
             </Box>
@@ -42,7 +48,9 @@ const main = () => {
         </ThemeProvider>
         <Outlet />
         <ThemeProvider theme={theme}>
-          <Box sx={{ display: { xs: 'none', rightBarNone: 'block', width: 300 } }}>
+          <Box
+            sx={{ display: { xs: 'none', rightBarNone: 'block', width: 300 } }}
+          >
             <Box sx={{ position: 'fixed', width: 'inherit' }}>
               <RightSideBar />
             </Box>

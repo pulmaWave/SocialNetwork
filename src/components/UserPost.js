@@ -6,7 +6,12 @@ const UserPost = () => {
   const displayName = localStorage.getItem('userName');
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center'
+      }}
+    >
       <Box
         sx={{
           borderRadius: '50%',
