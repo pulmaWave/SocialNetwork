@@ -78,13 +78,13 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   };
 
-  React.useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token === null) {
-      console.log('token', token);
-      navigate('/sign-in', { replace: true });
-    }
-  });
+  // React.useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (token === null) {
+  //     console.log('token', token);
+  //     navigate('/sign-in', { replace: true });
+  //   }
+  // });
 
   const handleMenuSignOut = () => {
     localStorage.removeItem('token');

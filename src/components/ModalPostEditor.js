@@ -198,7 +198,6 @@ export default function KeepMountedModal() {
         tags: Object.values(tags),
         imageUrl: imgUrl ? { url: imgUrl } : ''
       }).then(async (res) => {
-        console.log('Post with id: ', res.id);
         const newPost = await getPost(res.id);
         dispatch(addOnePost({ id: res.id, ...newPost }));
       });
@@ -217,7 +216,6 @@ export default function KeepMountedModal() {
       // 'file' comes from the Blob or File API
       uploadBytes(storageRef, selectedImage).then(() => {
         // uploaded success
-        console.log('Uploaded a blob or file!');
         getDownloadURL(ref(storage, `${selectedImage.name}`))
           .then((url) => {
             // `url` is the download URL for `${selectedImage.name}`
@@ -230,7 +228,6 @@ export default function KeepMountedModal() {
             xhr.open('GET', url);
             // send request get url from storage
             xhr.send();
-            console.log('url from storage:  ', url);
             // create a post width image (url of image)
             addPost(url);
             // clear content of post

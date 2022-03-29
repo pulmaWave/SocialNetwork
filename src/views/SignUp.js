@@ -19,14 +19,6 @@ const theme = createTheme();
 
 export default function SignUp() {
   const navigate = useNavigate();
-  // check user logged yet
-  // React.useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (token !== null) {
-  //     console.log('token page  signIn', token);
-  //     navigate('/', { replace: true });
-  //   }
-  // });
 
   const auth = getAuth();
 
@@ -39,7 +31,6 @@ export default function SignUp() {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log('user id was created: ', user);
         navigate('/', { replace: true });
         // save data to localStorage
         localStorage.setItem('userName', user.displayName?.toLowerCase());

@@ -138,7 +138,7 @@ const Profile = () => {
                     <Box sx={{ fontWeight: 'bold' }}>Nguyễn Công Thịnh</Box>
                   </Typography>
                   <Typography variant="body" component="div">
-                    <Box sx={{ textAlign: 'left' }}>(Nick name)</Box>
+                    <Box sx={{ textAlign: 'left' }}>( Bunmamkey )</Box>
                   </Typography>
                   <ShowFriendIcons />
                 </Box>
