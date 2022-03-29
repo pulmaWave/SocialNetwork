@@ -34,7 +34,7 @@ const main = () => {
           [theme.breakpoints.down('mb')]: {
             padding: 'unset'
           },
-          backgroundColor: `${color.gray[100]}`
+          backgroundColor: `${color.bgcolor}`
         }}
       >
         <ThemeProvider theme={theme}>

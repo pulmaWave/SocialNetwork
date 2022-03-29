@@ -27,7 +27,7 @@ const provider = new GoogleAuthProvider();
 const storage = getStorage();
 // .file config
 const metadata = {
-  contentType: 'image/jpeg'
+  contentType: 'image/jpeg/jpg/png'
 };
 provider.setCustomParameters({ prompt: 'select_account' });
 export { db, auth, provider, storage, ref, uploadBytes, getDownloadURL , metadata };

@@ -13,87 +13,26 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate, Link } from 'react-router-dom';
-
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../config/firebase';
-import {
-  doc,
-  getDoc,
-  getDocs,
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  where
-} from 'firebase/firestore';
+import { getDocs, collection, addDoc } from 'firebase/firestore';
 import { db } from '../config/firebase';
+import { getCollection, addUser } from '../utilities/utilities';
+import colors from '../assets/style/GlobalStyles';
 
+const color = colors.colors;
 const theme = createTheme();
 
 export default function SignIn() {
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token !== null) {
-      console.log('token page  signIn', token);
-      navigate('/', { replace: true });
-    }
-  });
-
-  const addUser = (uid) => {
-    try {
-      // add data to firestore
-      addDoc(collection(db, 'users'), {
-        uid: uid,
-        email: '',
-        password: '',
-        image: ''
-      }).then(async (res) => {
-        console.log('uid: ', res.id);
-      });
-    } catch (err) {
-      alert(err);
-    }
-  };
-
-  // get UserId from firestore
-  const getUserId = async (uid) => {
-    let arr = [];
-    try {
-      // const data = await getDocs(
-      //   query(collection(db, 'users'), where('uid', '==', uid))
-      // );
-      //   console.log('data ', data)
-
-      return await getDocs(collection(db, 'users')).then((res) => {
-        let arr = [];
-        res.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          arr.push({
-            id: doc.id,
-            ...doc.data()
-          });
-        });
-        console.log('arr: ', arr);
-        return arr;
-      });
-
-      // if (data) {
-      //   data.forEach((doc) => {
-      //     // arr.push({
-      //     //   id: doc.id,
-      //     //   ...doc.data()
-      //     // });
-      //     console.log('doc.data(): ', doc.data());
-      //   });
-      //   console.log('arr: ', arr);
-      //   // return arr;
-      // }
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // React.useEffect(() => {
+  //   const token = localStorage.getItem('token');
+  //   if (token !== null) {
+  //     console.log('token page  signIn', token);
+  //     navigate('/', { replace: true });
+  //   }
+  // });
 
   async function googleHandler() {
     provider.setCustomParameters({ prompt: 'select_account' });
@@ -104,12 +43,15 @@ export default function SignIn() {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        const userExist = await getUserId(user.uid);
-        console.log('user exist: ', userExist);
-        if (user.uid !== userExist[0].uid) {
-          addUser(user.uid);
-        } else {
-          console.log('user exist');
+        const userList = await getCollection('users');
+        const userExist = userList.every((acc) => acc.uid !== user.uid);
+        try {
+          if (userExist === true) {
+            // userExist  === true but actually user not exist =)) it's real
+            addUser(user.uid);
+          }
+        } catch (error) {
+          console.log(error);
         }
         // save data to localStorage
         localStorage.setItem('userName', user.displayName.toLowerCase());
@@ -145,7 +87,7 @@ export default function SignIn() {
             alignItems: 'center'
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: `${color.main}` }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
@@ -185,14 +127,28 @@ export default function SignIn() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{
+                mt: 2,
+                mb: 1,
+                bgcolor: `${color.main}`,
+                '&:hover': {
+                  bgcolor: `${color.sky[900]}`
+                }
+              }}
             >
               Sign In
             </Button>
             <Button
               fullWidth
               variant="contained"
-              sx={{ mt: 2, mb: 2 }}
+              sx={{
+                mt: 1,
+                mb: 2,
+                bgcolor: `${color.main}`,
+                '&:hover': {
+                  bgcolor: `${color.sky[900]}`
+                }
+              }}
               onClick={googleHandler}
             >
               Sign in with google

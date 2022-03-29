@@ -3,14 +3,14 @@ import * as dayjs from 'dayjs';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
-import { IconButton } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TextField from '@mui/material/TextField';
 import { Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
-import { useDispatch } from 'react-redux';
-import { addIdPost, addOnePost } from '../redux/action/actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { addOnePost } from '../redux/action/actions';
+import { setTagPost } from '../redux/selector';
 import { doc, getDoc } from 'firebase/firestore';
 
 import { collection, addDoc } from 'firebase/firestore';
@@ -21,8 +21,11 @@ import {
   uploadBytes,
   getDownloadURL
 } from '../config/firebase';
-import color from '../assets/style/GlobalStyles';
+import colors from '../assets/style/GlobalStyles';
 import UserInfo from '../components/UserInfo/UserInfo';
+import Chip from './Chip';
+
+const color = colors.colors;
 
 const theme = createTheme({
   breakpoints: {
@@ -38,10 +41,9 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  bgcolor: `${color.colors.white}`,
+  bgcolor: `${color.white}`,
   boxShadow: 24,
   minWidth: '480px',
-  minHeight: '400px',
   outline: 'none',
   borderRadius: '7px',
   p: '10px',
@@ -58,8 +60,8 @@ const style = {
 const buttonModal = {
   fontSize: '16px',
   textTransform: 'capitalize',
-  color: `${color.colors.gray[600]}`,
-  bgcolor: `${color.colors.gray[200]}`,
+  color: `${color.gray[600]}`,
+  bgcolor: `${color.gray[200]}`,
   borderRadius: 10,
   marginLeft: 2,
   px: 2,
@@ -67,38 +69,34 @@ const buttonModal = {
   height: '-webkit-fill-available',
   display: 'flex',
   ':hover': {
-    bgcolor: `${color.colors.gray[300]}`
+    bgcolor: `${color.gray[300]}`
   }
 };
 
 const buttonPost = {
   fontSize: '16px',
   fontWeight: 'bold',
-  width: '96%',
-  bgcolor: `${color.colors.blue[500]}`,
-  padding: '10px',
+  width: '100%',
+  bgcolor: `${color.main}`,
+  padding: '5px',
   borderRadius: '5px',
   outline: 'none',
   border: 'none',
   textAlign: 'center',
   textTransform: 'capitalize',
   marginTop: 'auto',
-  color: `${color.colors.white}`,
+  color: `${color.white}`,
   ':hover': {
-    bgcolor: `${color.colors.blue[500]}`
+    bgcolor: `${color.blue[500]}`
   },
-  position: 'absolute',
-  left: '-46%',
-  bottom: 0,
-  transform: `translate(${50}%, ${-50}%)`
 };
 
 const buttonPostDisable = {
   fontSize: '16px',
   fontWeight: 'bold',
-  width: '96%',
-  color: `${color.colors.gray[400]}`,
-  bgcolor: `${color.colors.gray[200]}`,
+  width: '100%',
+  color: `${color.gray[400]}`,
+  bgcolor: `${color.gray[200]}`,
   padding: '10px',
   borderRadius: '5px',
   outline: 'none',
@@ -106,10 +104,6 @@ const buttonPostDisable = {
   textAlign: 'center',
   cursor: 'not-allowed',
   marginTop: 'auto',
-  position: 'absolute',
-  left: '-46%',
-  bottom: 0,
-  transform: `translate(${50}%, ${-50}%)`
 };
 
 const btnModalClose = {
@@ -120,18 +114,18 @@ const btnModalClose = {
   height: '30px',
   borderRadius: '50%',
   cursor: 'pointer',
-  backgroundColor: `${color.colors.gray[200]}`,
+  backgroundColor: `${color.gray[200]}`,
   ':hover': {
-    backgroundColor: `${color.colors.gray[700]}`
+    backgroundColor: `${color.gray[700]}`
   }
 };
 
 // handle hover button create post
 function MouseOVer(event) {
-  event.target.style.background = `${color.colors.gray[400]}`;
+  event.target.style.background = `${color.gray[400]}`;
 }
 function MouseOut(event) {
-  event.target.style.background = `${color.colors.gray[200]}`;
+  event.target.style.background = `${color.gray[200]}`;
 }
 
 const Input = styled('input')({
@@ -145,6 +139,11 @@ export default function KeepMountedModal() {
   const [imageUrl, setImageUrl] = React.useState(null);
   const dispatch = useDispatch();
 
+  //list tag from redux
+  const tags = useSelector(setTagPost);
+  React.useEffect(() => {
+    console.log('tags from redux: ', Object.values(tags));
+  }, [tags]);
   //Display a preview of the image using the URL object
   React.useEffect(() => {
     if (selectedImage) {
@@ -157,7 +156,7 @@ export default function KeepMountedModal() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const Assignment = () => {
+  const ButtonImage = () => {
     return (
       <>
         <label htmlFor="contained-button-file">
@@ -168,7 +167,11 @@ export default function KeepMountedModal() {
             type="file"
             onChange={(e) => setSelectedImage(e.target.files[0])}
           />
-          <Button variant="contained" component="span" sx={{ marginBottom: 1 }}>
+          <Button
+            variant="contained"
+            component="span"
+            sx={{ bgcolor: `${color.main}` }}
+          >
             Image
           </Button>
         </label>
@@ -192,13 +195,12 @@ export default function KeepMountedModal() {
       addDoc(collection(db, 'posts'), {
         uid: localStorage.getItem('uid'),
         content: { isContent },
-        tag: 'travel',
+        tags: Object.values(tags),
         imageUrl: imgUrl ? { url: imgUrl } : ''
       }).then(async (res) => {
         console.log('Post with id: ', res.id);
         const newPost = await getPost(res.id);
         dispatch(addOnePost({ id: res.id, ...newPost }));
-        //console.log('addIdPost action: ', addIdPost(res.id));
       });
     } catch (err) {
       alert(err);
@@ -268,7 +270,7 @@ export default function KeepMountedModal() {
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
-                  borderBottom: `1px solid ${color.colors.gray[400]}`,
+                  borderBottom: `1px solid ${color.gray[400]}`,
                   fontWeight: 'bold',
                   pb: '10px',
                   marginBottom: 2
@@ -295,7 +297,8 @@ export default function KeepMountedModal() {
                 alignItems: 'center',
                 objectFit: 'content',
                 overflowX: 'hidden',
-                overflowY: 'hidden',
+                overflowY: 'scroll',
+                maxHeight: '300px',
                 '& .MuiTextField-root': { m: 1, width: '100%' }
               }}
               noValidate
@@ -324,7 +327,8 @@ export default function KeepMountedModal() {
                 </Box>
               )}
             </Box>
-            <Assignment />
+            <ButtonImage />
+            <Chip />
             {isContent || (imageUrl && selectedImage) ? (
               <Button fullWidth sx={buttonPost} onClick={handleSubmit}>
                 Post

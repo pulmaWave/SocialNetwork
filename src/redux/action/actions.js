@@ -17,3 +17,8 @@ export const addOnePost = (data) => ({
   type: 'listPost/addOnePost',
   payload: data
 });
+
+export const setTagPost = (data) => ({
+  type: 'post/setTagPost',
+  payload: data
+});

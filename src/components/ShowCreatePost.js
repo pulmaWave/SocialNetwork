@@ -26,9 +26,11 @@ const ShowCreatePost = () => {
           borderRadius: 'unset',
           height: '40px'
         },
-        p: '10px',
+        p: '10px 15px',
         boxShadow: 1,
-        backgroundColor: `${color.colors.white}`
+        backgroundColor: `${color.colors.white}`,
+        maxWidth: 500,
+        boxSizing: 'border-box'
       }}
     >
       <Box>

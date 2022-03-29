@@ -1,11 +1,12 @@
 import { React, useState, useEffect } from 'react';
-import Post from '../../components/Main/Post';
+import Post from '../../components/Post';
 import Loading from '../../layout/Loading';
 import { Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CreatePost from '../../components/ShowCreatePost';
-import { getDocs, collection, query, where } from 'firebase/firestore';
+import { collection, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
+import { getListQueryPost } from '../../utilities/utilities';
 import * as dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn'; // import locale
 
@@ -22,21 +23,12 @@ const theme = createTheme({
 const ListBeauty = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const qBeauty = query(collection(db, 'posts'), where('tag', '==', 'beauty'));
+  const qBeauty = query(
+    collection(db, 'posts'),
+    where('tags', 'array-contains', 'beauty')
+  );
   useEffect(() => {
-    setLoading(true);
-    getDocs(qBeauty).then((res) => {
-      let arr = [];
-      res.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        arr.push({
-          id: doc.id,
-          ...doc.data()
-        });
-      });
-      setPosts(arr);
-      setLoading(false);
-    });
+    getListQueryPost(setLoading, setPosts, qBeauty);
   }, []);
 
   return (
@@ -70,7 +62,7 @@ const ListBeauty = () => {
                   key={post?.id}
                   content={post?.content?.isContent}
                   url={post?.imageUrl?.url}
-                  tag={post?.tag}
+                  tags={post?.tags}
                 />
               );
             })}

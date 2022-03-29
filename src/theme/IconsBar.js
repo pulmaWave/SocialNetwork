@@ -7,6 +7,7 @@ import FastFoodOutlinedIcon from '@mui/icons-material/FastfoodOutlined';
 import FastFoodIcon from '@mui/icons-material/Fastfood';
 import AutoFixHighOutlinedIcon from '@mui/icons-material/AutoFixHighOutlined';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import Food from '../components/icons/FoodSvg';
 
 import { Box, IconButton } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -107,13 +108,13 @@ const IconsBar = (props) => {
       {location.pathname === route[2] ? (
         <IconButton sx={iconBtActive}>
           <Link to="/food" style={classes}>
-            <FastFoodIcon />
+            <Food fill={props.color} size="24" />
           </Link>
         </IconButton>
       ) : (
         <IconButton sx={iconBt}>
           <Link to="/food" style={classes}>
-            <FastFoodOutlinedIcon />
+            <Food fill={props.color} size="24" />
           </Link>
         </IconButton>
       )}

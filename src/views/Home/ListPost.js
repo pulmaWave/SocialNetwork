@@ -1,13 +1,14 @@
 import { React, useState, useEffect } from 'react';
-import Post from '../../components/Main/Post';
+import Post from '../../components/Post';
 import Loading from '../../layout/Loading';
 import { Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getDocs, collection, limit } from 'firebase/firestore';
+import { getDocs, collection } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { addListPost } from '../../redux/action/actions';
 import { listPostSelector } from '../../redux/selector';
+// import { getCollection } from '../../utilities/utilities';
 import ShowCreatePost from '../../components/ShowCreatePost';
 
 const theme = createTheme({
@@ -21,7 +22,6 @@ const theme = createTheme({
 });
 
 const ListPost = () => {
-  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   // get list post from redux
@@ -57,13 +57,13 @@ const ListPost = () => {
             mt: '20px',
             paddingBottom: '20px',
             [theme.breakpoints.down('md')]: {
-              mt: '80px',
+              mt: '80px'
             },
             [theme.breakpoints.down('m600')]: {
-              mt: '50px',
+              mt: '50px'
             },
             [theme.breakpoints.down('mb')]: {
-              mt: 'unset',
+              mt: 'unset'
             }
           }}
         >
@@ -75,7 +75,7 @@ const ListPost = () => {
                   key={post?.id}
                   content={post?.content?.isContent}
                   url={post?.imageUrl?.url}
-                  tag={post?.tag}
+                  tags={post?.tags}
                 />
               );
             })}

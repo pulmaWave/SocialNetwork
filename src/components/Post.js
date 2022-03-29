@@ -1,16 +1,17 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { Box, Button } from '@mui/material';
 import { Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import {
+  CheckBoxOutlineBlank,
   LocalFireDepartment,
   Sms,
   WifiProtectedSetup
 } from '@mui/icons-material';
 
-import UserPost from '../UserPost';
-import colors from '../../assets/style/GlobalStyles';
+import UserPost from './UserPost';
+import colors from '../assets/style/GlobalStyles';
 
 const color = colors.colors;
 const theme = createTheme({
@@ -24,12 +25,40 @@ const theme = createTheme({
   }
 });
 
-const Post = ({ content, url }) => {
+const voted = { color: `${color.main}` };
+const none = { color: `${color.gray[500]}` };
+
+const btnPost = {
+  width: '33%',
+  color: 'unset',
+  textTransform: 'unset',
+  m: '5px 0',
+  p: '5px 0',
+  ':hover': {
+    backgroundColor: `${color.gray[200]}`
+  }
+};
+
+const verticalAlign = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center'
+};
+
+const mrIcons = {
+  marginRight: '3px',
+  display: 'flex',
+  alignItems: 'center'
+};
+
+const Post = ({ content, url, checkVote, comment, tags }) => {
   const [vote, setVote] = useState(false);
   const handleClickVote = () => {
     setVote(!vote);
-    console.log('check vote: ', vote);
   };
+  useEffect(() => {
+    console.log('check vote: ', vote);
+  }, [vote]);
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -43,7 +72,7 @@ const Post = ({ content, url }) => {
           borderRadius: '5px',
           [theme.breakpoints.down('mb')]: {
             borderRadius: 'unset',
-            maxWidth: '99vw',
+            maxWidth: '99vw'
           },
           paddingBottom: '10px',
           boxShadow: 1,
@@ -53,8 +82,7 @@ const Post = ({ content, url }) => {
         <ThemeProvider theme={theme}>
           <Box
             sx={{
-              p: '10px',
-              marginBottom: '10px'
+              p: '12px 15px',
             }}
           >
             <UserPost />
@@ -62,16 +90,52 @@ const Post = ({ content, url }) => {
         </ThemeProvider>
         <Box>
           <Typography
-            variant="h6"
             component="div"
             sx={{
               marginBottom: '10px',
-              padding: '0 10px',
+              padding: '0 15px',
               wordBreak: 'break-word'
             }}
           >
-            {content}
+            <Box sx={{ fontSize: 15 }}>{content}</Box>
           </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '0 10px',
+              mb: '10px',
+              color: `${color.sky[800]}`
+            }}
+          >
+            <LocalOfferIcon sx={{ width: '18px', height: '18px', mr: '3px' }} />
+            <Typography>:</Typography>
+            <Box
+              sx={{
+                display: 'flex'
+              }}
+            >
+              {tags.length > 0 &&
+                tags.map((tag, index) => {
+                  return (
+                    <Typography
+                      key={index}
+                      component="div"
+                      sx={{
+                        ml: '10px',
+                        bgcolor: `${color.main}`,
+                        color: `${color.white}`,
+                        padding: '0 10px',
+                        borderRadius: '50px',
+                        fontStyle: 'italic'
+                      }}
+                    >
+                      <Box sx={{ fontSize: 15 }}>{tag}</Box>
+                    </Typography>
+                  );
+                })}
+            </Box>
+          </Box>
           {url && (
             <ThemeProvider theme={theme}>
               <Box
@@ -105,7 +169,7 @@ const Post = ({ content, url }) => {
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <Box sx={{ marginRight: '3px' }}>
-                <LocalFireDepartment sx={{ color: `${color.red[500]}` }} />
+                <LocalFireDepartment sx={voted} />
               </Box>
               <Typography
                 variant="body1"
@@ -119,7 +183,7 @@ const Post = ({ content, url }) => {
                   }
                 }}
               >
-                10.000
+                <Box sx={{ fontSize: 15 }}>10.0000</Box>
               </Typography>
             </Box>
             <Box
@@ -142,7 +206,7 @@ const Post = ({ content, url }) => {
                   }
                 }}
               >
-                1456 Comment
+                <Box sx={{ fontSize: 15 }}>1456 comment</Box>
               </Typography>
               <Typography
                 variant="body1"
@@ -156,7 +220,7 @@ const Post = ({ content, url }) => {
                   }
                 }}
               >
-                3421 Share
+                <Box sx={{ fontSize: 15 }}>3421 share</Box>
               </Typography>
             </Box>
           </Box>
@@ -165,87 +229,36 @@ const Post = ({ content, url }) => {
               display: 'flex',
               justifyContent: 'space-between',
               m: '0 0 10px 0',
-              borderTop: `1px solid ${color.gray[400]}`,
-              borderBottom: `1px solid ${color.gray[400]}`
+              borderTop: `1px solid ${color.gray[300]}`,
+              borderBottom: `1px solid ${color.gray[300]}`
             }}
           >
-            <Button
-              onClick={handleClickVote}
-              sx={{
-                width: '33%',
-                color: 'unset',
-                textTransform: 'unset',
-                m: 'unset',
-                p: '10px 0',
-                ':hover': {
-                  backgroundColor: `${color.gray[200]}`
-                }
-              }}
-            >
-              <Box
-                sx={{
-                  marginRight: '3px',
-                  display: 'flex',
-                  alignItems: 'center'
-                }}
-              >
-                <LocalFireDepartment sx={{ color: `${color.red[500]}` }} />
+            <Button onClick={handleClickVote} sx={btnPost}>
+              <Box sx={verticalAlign}>
+                <LocalFireDepartment sx={vote ? voted : none} />
               </Box>
-              <Typography sx={{ display: 'block' }}>Vote</Typography>
+              <Typography component="div">
+                <Box sx={{ fontSize: 15 }}>Vote</Box>
+              </Typography>
             </Button>
-            <Button
-              sx={{
-                width: '33%',
-                color: 'unset',
-                textTransform: 'unset',
-                m: 'unset',
-                p: '10px 0',
-                ':hover': {
-                  backgroundColor: `${color.gray[200]}`
-                }
-              }}
-            >
-              <Box
-                sx={{
-                  marginRight: '3px',
-                  display: 'flex',
-                  alignItems: 'center'
-                }}
-              >
-                <Sms />
-              </Box>
-              <Typography>Comment</Typography>
-            </Button>
-            <Button
-              sx={{
-                display: 'unset',
-                width: '33%',
-                color: 'unset',
-                textTransform: 'unset',
-                m: 'unset',
-                p: '10px 0',
-                ':hover': {
-                  backgroundColor: `${color.gray[200]}`
-                }
-              }}
-            >
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                <Box
-                  sx={{
-                    marginRight: '3px',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}
-                >
-                  <WifiProtectedSetup />
+            <Button sx={btnPost}>
+              <Box sx={verticalAlign}>
+                <Box sx={mrIcons}>
+                  <Sms sx={none} />
                 </Box>
-                <Typography>Share</Typography>
+              </Box>
+              <Typography component="div">
+                <Box sx={{ fontSize: 15 }}>Comment</Box>
+              </Typography>
+            </Button>
+            <Button sx={btnPost}>
+              <Box sx={verticalAlign}>
+                <Box sx={mrIcons}>
+                  <WifiProtectedSetup sx={none} />
+                </Box>
+                <Typography component="div">
+                  <Box sx={{ fontSize: 15 }}>Share</Box>
+                </Typography>
               </Box>
             </Button>
           </Box>

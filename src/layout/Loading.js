@@ -16,6 +16,7 @@ const theme = createTheme({
     values: {
       mb: 480,
       m500: 500,
+      m600: 600,
       md: 900
     }
   }
@@ -26,7 +27,19 @@ function Media(props) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box>
+      <Box
+        sx={{
+          [theme.breakpoints.down('md')]: {
+            mt: '80px'
+          },
+          [theme.breakpoints.down('m600')]: {
+            mt: '65px'
+          },
+          [theme.breakpoints.down('mb')]: {
+            mt: 'unset'
+          }
+        }}
+      >
         <Card
           sx={{
             width: 500,

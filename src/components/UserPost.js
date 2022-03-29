@@ -1,6 +1,9 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import avatar from '../assets/images/avt.jpg';
+import colors from '../assets/style/GlobalStyles';
+
+const color = colors.colors;
 
 const UserPost = () => {
   const displayName = localStorage.getItem('userName');
@@ -35,7 +38,6 @@ const UserPost = () => {
       </Box>
       <Box sx={{ marginLeft: '10px' }}>
         <Typography
-          variant="body1"
           component="div"
           sx={{
             textTransform: 'capitalize',
@@ -46,10 +48,14 @@ const UserPost = () => {
             }
           }}
         >
-          {displayName ? displayName : 'User name is loading'}
+          <Box sx={{ fontSize: 15 }}>
+            {displayName ? displayName : 'User name is loading'}
+          </Box>
         </Typography>
-        <Typography variant="subtitle2" component="div">
-          10 hours ago
+        <Typography component="div">
+          <Box sx={{ fontSize: 13, color: `${color.gray[500]}` }}>
+            10 hours ago
+          </Box>
         </Typography>
       </Box>
     </Box>

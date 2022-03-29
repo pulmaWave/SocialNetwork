@@ -1,6 +1,7 @@
 import * as React from 'react';
 import avatar from '../../assets/images/avt.jpg';
 import { Box, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const UserInfo = (props) => {
   const displayName = localStorage.getItem('userName');
@@ -34,19 +35,21 @@ const UserInfo = (props) => {
             }}
           />
         </Box>
-        <Typography
-          variant="body1"
-          sx={{
-            textTransform: 'capitalize',
-            marginLeft: '10px',
-            cursor: 'pointer',
-            ':hover': {
-              textDecoration: 'underline'
-            }
-          }}
-        >
-          {displayName ? displayName : 'User name is loading'}
-        </Typography>
+        <Link to="/profile" style={{ textDecoration: 'none', color: 'unset' }}>
+          <Typography
+            variant="body1"
+            sx={{
+              textTransform: 'capitalize',
+              marginLeft: '10px',
+              cursor: 'pointer',
+              ':hover': {
+                textDecoration: 'underline'
+              }
+            }}
+          >
+            {displayName ? displayName : 'User name is loading'}
+          </Typography>
+        </Link>
       </Box>
     </Box>
   );

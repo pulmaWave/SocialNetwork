@@ -78,25 +78,24 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   };
 
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token === null) {
+      console.log('token', token);
+      navigate('/sign-in', { replace: true });
+    }
+  });
+
   const handleMenuSignOut = () => {
     localStorage.removeItem('token');
     signOut(auth)
       .then(() => {
-        console.log('logged out');
         navigate('/sign-in');
       })
       .catch((error) => {
         console.log(error);
       });
   };
-
-  // React.useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (token === null) {
-  //     console.log('token', token);
-  //     navigate('/sign-in', { replace: true });
-  //   }
-  // });
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -135,7 +134,7 @@ export default function PrimarySearchAppBar() {
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
-            bgcolor: `${color.sky[800]}`
+            bgcolor: `${color.main}`
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', width: '400px' }}>
@@ -246,7 +245,7 @@ export default function PrimarySearchAppBar() {
             justifyContent: 'center'
           }}
         >
-          <IconsBar color={`${color.sky[800]}`} />
+          <IconsBar color={`${color.main}`} />
         </Box>
       </AppBar>
       {renderMenu}

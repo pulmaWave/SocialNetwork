@@ -3,6 +3,13 @@ module.exports = {
     transparent: 'transparent',
     current: 'currentColor',
     white: '#ffffff',
+    color: '#0f172a',
+    main: '#075985',
+    mainHover: '#0c4a6e',
+    icons: '#6b7280',
+    bgcolor: '#f3f4f6',
+    btnBgColor: '#e5e7eb',
+    hoverBtnBgColor: '#d1d5db',
     slate: {
       50: '#f8fafc',
       100: '#f1f5f9',
