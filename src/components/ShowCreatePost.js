@@ -24,7 +24,7 @@ const ShowCreatePost = () => {
         borderRadius: '5px',
         [theme.breakpoints.down('mb')]: {
           borderRadius: 'unset',
-          height: '40px'
+          height: 'fit-content'
         },
         p: '10px 15px',
         boxShadow: 1,

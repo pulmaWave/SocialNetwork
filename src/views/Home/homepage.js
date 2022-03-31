@@ -43,7 +43,7 @@ const homepage = () => {
             }
           }}
         >
-          <IconsBar color={`${color.sky[800]}`} />
+          <IconsBar colorActive={`${color.main}`} color={`${color.gray[600]}`} />
         </Box>
       </ThemeProvider>
     </Box>

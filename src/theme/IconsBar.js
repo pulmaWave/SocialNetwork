@@ -1,12 +1,7 @@
 import { React, useEffect, useState } from 'react';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import HomeIcon from '@mui/icons-material/Home';
-import PedalBikeOutlinedIcon from '@mui/icons-material/PedalBikeOutlined';
-import TwoWheelerOutlinedIcon from '@mui/icons-material/TwoWheelerOutlined';
-import FastFoodOutlinedIcon from '@mui/icons-material/FastfoodOutlined';
-import FastFoodIcon from '@mui/icons-material/Fastfood';
-import AutoFixHighOutlinedIcon from '@mui/icons-material/AutoFixHighOutlined';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import HomeSvg from '../components/icons/HomeSvg';
+import PlainSvg from '../components/icons/PlainSvg';
+import SeedingSvg from '../components/icons/SeedingSvg';
 import Food from '../components/icons/FoodSvg';
 
 import { Box, IconButton } from '@mui/material';
@@ -29,7 +24,6 @@ const theme = createTheme({
 
 const IconsBar = (props) => {
   const classes = {
-    color: `${props.color}`,
     width: '100%',
     height: '100%',
     display: 'flex',
@@ -38,19 +32,21 @@ const IconsBar = (props) => {
   };
 
   const iconBtActive = {
+    color: `${props.colorActive}`,
     borderRadius: 'unset',
     padding: '15px',
     [theme.breakpoints.down('md')]: {
       padding: '10px'
     },
-    borderBottom: `3px solid ${props.color}`,
+    borderBottom: `3px solid ${props.colorActive}`,
     [theme.breakpoints.down('mb')]: {
       borderBottom: 'unset',
-      borderTop: `3px solid ${props.color}`
+      borderTop: `3px solid ${props.colorActive}`
     },
     width: '25%'
   };
   const iconBt = {
+    color: `${props.color}`,
     borderRadius: 'unset',
     padding: '18px',
     [theme.breakpoints.down('md')]: {
@@ -82,33 +78,33 @@ const IconsBar = (props) => {
       {location.pathname === route[0] ? (
         <IconButton sx={iconBtActive}>
           <Link to="/" style={classes}>
-            <HomeIcon />
+            <HomeSvg fill={props.colorActive} size="24" />
           </Link>
         </IconButton>
       ) : (
         <IconButton sx={iconBt}>
           <Link to="/" style={classes}>
-            <HomeOutlinedIcon />
+            <HomeSvg fill={props.color} size="24" />
           </Link>
         </IconButton>
       )}
       {location.pathname === route[1] ? (
         <IconButton sx={iconBtActive}>
           <Link to="/travel" style={classes}>
-            <TwoWheelerOutlinedIcon />
+            <PlainSvg fill={props.colorActive} size="24" />
           </Link>
         </IconButton>
       ) : (
         <IconButton sx={iconBt}>
           <Link to="/travel" style={classes}>
-            <PedalBikeOutlinedIcon />
+            <PlainSvg fill={props.color} size="24" />
           </Link>
         </IconButton>
       )}
       {location.pathname === route[2] ? (
         <IconButton sx={iconBtActive}>
           <Link to="/food" style={classes}>
-            <Food fill={props.color} size="24" />
+            <Food fill={props.colorActive} size="24" />
           </Link>
         </IconButton>
       ) : (
@@ -121,13 +117,13 @@ const IconsBar = (props) => {
       {location.pathname === route[3] ? (
         <IconButton sx={iconBtActive}>
           <Link to="/beauty" style={classes}>
-            <AutoFixHighIcon />
+            <SeedingSvg fill={props.colorActive} size="24" />
           </Link>
         </IconButton>
       ) : (
         <IconButton sx={iconBt}>
           <Link to="/beauty" style={classes}>
-            <AutoFixHighOutlinedIcon />
+            <SeedingSvg fill={props.color} size="24" />
           </Link>
         </IconButton>
       )}

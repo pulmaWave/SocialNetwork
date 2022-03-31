@@ -52,7 +52,6 @@ export default function MultipleSelectChip() {
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value
     );
-    console.log('tag name: ', value);
   };
 
   return (

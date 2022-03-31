@@ -26,13 +26,13 @@ const theme = createTheme();
 export default function SignIn() {
   const navigate = useNavigate();
 
-  // React.useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (token !== null) {
-  //     console.log('token page  signIn', token);
-  //     navigate('/', { replace: true });
-  //   }
-  // });
+  React.useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token !== null) {
+      console.log('token page  signIn', token);
+      navigate('/', { replace: true });
+    }
+  });
 
   async function googleHandler() {
     provider.setCustomParameters({ prompt: 'select_account' });
@@ -43,12 +43,13 @@ export default function SignIn() {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
+        console.log(user);
         const userList = await getCollection('users');
         const userExist = userList.every((acc) => acc.uid !== user.uid);
         try {
           if (userExist === true) {
             // userExist  === true but actually user not exist =)) it's real
-            addUser(user.uid);
+            addUser(user.uid, user.displayName, user.email, user.photoURL);
           }
         } catch (error) {
           console.log(error);

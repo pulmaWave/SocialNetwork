@@ -169,7 +169,7 @@ export default function PrimarySearchAppBar() {
               justifyContent: 'center'
             }}
           >
-            <IconsBar color={`${color.white}`} />
+            <IconsBar colorActive={`${color.white}`} color={`${color.white}`} />
           </Box>
           <ThemeProvider theme={theme}>
             <Box
@@ -245,7 +245,7 @@ export default function PrimarySearchAppBar() {
             justifyContent: 'center'
           }}
         >
-          <IconsBar color={`${color.main}`} />
+          <IconsBar colorActive={`${color.main}`} color={`${color.main}`} />
         </Box>
       </AppBar>
       {renderMenu}

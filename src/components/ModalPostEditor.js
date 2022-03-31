@@ -24,6 +24,7 @@ import {
 import colors from '../assets/style/GlobalStyles';
 import UserInfo from '../components/UserInfo/UserInfo';
 import Chip from './Chip';
+import { getDocById } from '../utilities/utilities';
 
 const color = colors.colors;
 
@@ -88,7 +89,7 @@ const buttonPost = {
   color: `${color.white}`,
   ':hover': {
     bgcolor: `${color.blue[500]}`
-  },
+  }
 };
 
 const buttonPostDisable = {
@@ -103,7 +104,7 @@ const buttonPostDisable = {
   border: 'none',
   textAlign: 'center',
   cursor: 'not-allowed',
-  marginTop: 'auto',
+  marginTop: 'auto'
 };
 
 const btnModalClose = {
@@ -141,9 +142,6 @@ export default function KeepMountedModal() {
 
   //list tag from redux
   const tags = useSelector(setTagPost);
-  React.useEffect(() => {
-    console.log('tags from redux: ', Object.values(tags));
-  }, [tags]);
   //Display a preview of the image using the URL object
   React.useEffect(() => {
     if (selectedImage) {
@@ -196,9 +194,11 @@ export default function KeepMountedModal() {
         uid: localStorage.getItem('uid'),
         content: { isContent },
         tags: Object.values(tags),
-        imageUrl: imgUrl ? { url: imgUrl } : ''
+        imageUrl: imgUrl ? { url: imgUrl } : '',
+        voteBy: [],
+        counterVote: 0
       }).then(async (res) => {
-        const newPost = await getPost(res.id);
+        const newPost = await getDocById('posts', res.id);
         dispatch(addOnePost({ id: res.id, ...newPost }));
       });
     } catch (err) {

@@ -72,10 +72,13 @@ const ListPost = () => {
             listPosted.map((post) => {
               return (
                 <Post
+                  id={post?.id}
                   key={post?.id}
                   content={post?.content?.isContent}
                   url={post?.imageUrl?.url}
                   tags={post?.tags}
+                  voteBy={post?.voteBy}
+                  counterVote={post?.counterVote}
                 />
               );
             })}

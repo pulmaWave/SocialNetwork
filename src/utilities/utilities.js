@@ -6,12 +6,14 @@ import {
   getDocs,
   collection,
   addDoc,
+  setDoc,
   query,
   orderBy,
   where
 } from 'firebase/firestore';
 
 import { db } from '../config/firebase';
+import { display } from '@mui/system';
 
 //get list collection from firebase
 const getCollection = async (collectionName) => {
@@ -33,12 +35,12 @@ const getCollection = async (collectionName) => {
 };
 
 // add information of user then they logged
-const addUser = (uid, userName, email, dateOfBirth, image) => {
+const addUser = (uid, displayName, email, image, dateOfBirth) => {
   try {
     // add data to firestore
-    addDoc(collection(db, 'users'), {
+    setDoc(doc(db, 'users', uid), {
       uid: uid,
-      userName: userName ? userName : '',
+      userName: displayName ? displayName : '',
       email: email ? email : '',
       dateOfBirth: dateOfBirth ? dateOfBirth : '',
       image: image ? image : ''
@@ -68,4 +70,14 @@ const getListQueryPost = (setLoading, setPosts, query) => {
   });
 };
 
-export { getCollection, addUser, getListQueryPost };
+// get one post from firestore
+const getDocById = async (collection, id) => {
+  const noteSnapshot = await getDoc(doc(db, collection, id));
+  if (noteSnapshot.exists()) {
+    return noteSnapshot.data();
+  } else {
+    console.log("Note doesn't exist");
+  }
+};
+
+export { getCollection, addUser, getListQueryPost, getDocById };

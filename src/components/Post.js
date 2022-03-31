@@ -12,6 +12,9 @@ import {
 
 import UserPost from './UserPost';
 import colors from '../assets/style/GlobalStyles';
+import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { db } from '../config/firebase';
+import { getDocById } from '../utilities/utilities';
 
 const color = colors.colors;
 const theme = createTheme({
@@ -51,14 +54,57 @@ const mrIcons = {
   alignItems: 'center'
 };
 
-const Post = ({ content, url, checkVote, comment, tags }) => {
-  const [vote, setVote] = useState(false);
-  const handleClickVote = () => {
-    setVote(!vote);
-  };
+const uid = localStorage.getItem('uid');
+
+const Post = ({
+  content,
+  url,
+  checkVote,
+  comment,
+  tags,
+  id,
+  voteBy,
+  counterVote
+}) => {
+  const [vote, setVote] = useState();
+  const [counterVotePost, setCounterVotePost] = useState();
+  const contentRef = doc(db, 'posts', id);
   useEffect(() => {
-    console.log('check vote: ', vote);
-  }, [vote]);
+    getDocById('posts', id).then(async (data) => {
+      const counterVote = data.voteBy.length;
+      const voted = await data.voteBy.some((value) => value === uid);
+      setVote(voted);
+      setCounterVotePost(counterVote);
+    });
+  }, []);
+
+  const handleClickVote = async () => {
+    const data = await getDocById('posts', id);
+    const counterVote = data.voteBy.length;
+    setCounterVotePost(counterVote);
+    // check uid (user) vote yet?
+    const voted = await data.voteBy.some((value) => value === uid);
+
+    // update vote and counter vote of post
+    if (!voted) {
+      await updateDoc(contentRef, {
+        voteBy: arrayUnion(uid),
+        counterVote: counterVote + 1
+      });
+      setVote(!vote);
+      const data = await getDocById('posts', id);
+      setCounterVotePost(data.counterVote);
+    } else {
+      await updateDoc(contentRef, {
+        voteBy: arrayRemove(uid),
+        counterVote: counterVote - 1
+      });
+      setVote(!vote);
+      const data = await getDocById('posts', id);
+      setCounterVotePost(data.counterVote);
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -82,7 +128,7 @@ const Post = ({ content, url, checkVote, comment, tags }) => {
         <ThemeProvider theme={theme}>
           <Box
             sx={{
-              p: '12px 15px',
+              p: '12px 15px'
             }}
           >
             <UserPost />
@@ -183,7 +229,7 @@ const Post = ({ content, url, checkVote, comment, tags }) => {
                   }
                 }}
               >
-                <Box sx={{ fontSize: 15 }}>10.0000</Box>
+                <Box sx={{ fontSize: 15 }}>{counterVotePost}</Box>
               </Typography>
             </Box>
             <Box
@@ -238,7 +284,7 @@ const Post = ({ content, url, checkVote, comment, tags }) => {
                 <LocalFireDepartment sx={vote ? voted : none} />
               </Box>
               <Typography component="div">
-                <Box sx={{ fontSize: 15 }}>Vote</Box>
+                <Box sx={{ fontSize: 15 }}>vote</Box>
               </Typography>
             </Button>
             <Button sx={btnPost}>
