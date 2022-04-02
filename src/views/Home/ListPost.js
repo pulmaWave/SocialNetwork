@@ -79,6 +79,7 @@ const ListPost = () => {
                   tags={post?.tags}
                   voteBy={post?.voteBy}
                   counterVote={post?.counterVote}
+                  createAt={post?.createAt}
                 />
               );
             })}

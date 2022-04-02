@@ -11,9 +11,8 @@ import { styled } from '@mui/material/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { addOnePost } from '../redux/action/actions';
 import { setTagPost } from '../redux/selector';
-import { doc, getDoc } from 'firebase/firestore';
-
 import { collection, addDoc } from 'firebase/firestore';
+import { serverTimestamp } from 'firebase/firestore';
 import {
   db,
   storage,
@@ -177,15 +176,6 @@ export default function KeepMountedModal() {
     );
   };
 
-  // get one post from firestore
-  const getPost = async (id) => {
-    const noteSnapshot = await getDoc(doc(db, 'posts', id));
-    if (noteSnapshot.exists()) {
-      return noteSnapshot.data();
-    } else {
-      console.log("Note doesn't exist");
-    }
-  };
   // add post to firestore
   const addPost = (imgUrl) => {
     try {
@@ -196,7 +186,8 @@ export default function KeepMountedModal() {
         tags: Object.values(tags),
         imageUrl: imgUrl ? { url: imgUrl } : '',
         voteBy: [],
-        counterVote: 0
+        counterVote: 0,
+        createAt: serverTimestamp()
       }).then(async (res) => {
         const newPost = await getDocById('posts', res.id);
         dispatch(addOnePost({ id: res.id, ...newPost }));

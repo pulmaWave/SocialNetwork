@@ -1,5 +1,5 @@
-import { React, useEffect, useState } from 'react';
-import { Box, Button } from '@mui/material';
+import { React, useEffect, useState, useRef } from 'react';
+import { Box, Button, TextField } from '@mui/material';
 import { Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
@@ -7,14 +7,21 @@ import {
   CheckBoxOutlineBlank,
   LocalFireDepartment,
   Sms,
+  TextSnippetOutlined,
   WifiProtectedSetup
 } from '@mui/icons-material';
+import CustomInput from '../components/CustomInput';
+import InputBase from '@mui/material/InputBase';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Camera from '../components/icons/CameraSvg';
 
 import UserPost from './UserPost';
 import colors from '../assets/style/GlobalStyles';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { getDocById } from '../utilities/utilities';
+import moment from 'moment';
 
 const color = colors.colors;
 const theme = createTheme({
@@ -28,7 +35,7 @@ const theme = createTheme({
   }
 });
 
-const voted = { color: `${color.main}` };
+const voted = { color: `${color.mainRed}` };
 const none = { color: `${color.gray[500]}` };
 
 const btnPost = {
@@ -54,6 +61,20 @@ const mrIcons = {
   alignItems: 'center'
 };
 
+const boxNone = {
+  display: 'none'
+};
+
+const boxShow = {
+  display: 'block',
+  p: '10px 20px'
+};
+
+const fillComment = {
+  p: '10px',
+  borderRadius: '50px'
+};
+
 const uid = localStorage.getItem('uid');
 
 const Post = ({
@@ -64,11 +85,18 @@ const Post = ({
   tags,
   id,
   voteBy,
-  counterVote
+  counterVote,
+  createAt
 }) => {
+  let postTime = moment(createAt.seconds * 1000)
+    .startOf('seconds')
+    .toNow();
+  let textInput = useRef(null);
   const [vote, setVote] = useState();
   const [counterVotePost, setCounterVotePost] = useState();
+  const [commentAct, setCommentAct] = useState(false);
   const contentRef = doc(db, 'posts', id);
+  const avt = localStorage.getItem('avt');
   useEffect(() => {
     getDocById('posts', id).then(async (data) => {
       const counterVote = data.voteBy.length;
@@ -76,7 +104,11 @@ const Post = ({
       setVote(voted);
       setCounterVotePost(counterVote);
     });
-  }, []);
+    // get information user
+    getDocById('users', uid).then(async (data) => {
+      localStorage.setItem('avt', data.image);
+    });
+  }, [id]);
 
   const handleClickVote = async () => {
     const data = await getDocById('posts', id);
@@ -105,6 +137,13 @@ const Post = ({
     }
   };
 
+  // handle button comment
+  const handleBtnCmt = () => {
+    setCommentAct(true);
+    setTimeout(() => {
+      textInput.current.focus();
+    }, 100);
+  };
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -131,7 +170,7 @@ const Post = ({
               p: '12px 15px'
             }}
           >
-            <UserPost />
+            <UserPost time={postTime} />
           </Box>
         </ThemeProvider>
         <Box>
@@ -287,7 +326,7 @@ const Post = ({
                 <Box sx={{ fontSize: 15 }}>vote</Box>
               </Typography>
             </Button>
-            <Button sx={btnPost}>
+            <Button sx={btnPost} onClick={handleBtnCmt}>
               <Box sx={verticalAlign}>
                 <Box sx={mrIcons}>
                   <Sms sx={none} />
@@ -307,6 +346,50 @@ const Post = ({
                 </Typography>
               </Box>
             </Button>
+          </Box>
+        </Box>
+        <Box sx={commentAct ? boxShow : boxNone}>
+          <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+            <img
+              src={avt}
+              alt="avatar"
+              width="32"
+              height="32"
+              style={{ borderRadius: '50%', marginRight: '10px' }}
+            />
+            {/* <CustomInput
+              placeholder="Write something"
+              handleBtnCmt={handleBtnCmt}
+            /> */}
+            <Box
+              sx={{
+                p: '2px 4px',
+                display: 'flex',
+                width: '100%',
+                borderRadius: '18px',
+                bgcolor: `${color.bgcolor}`
+              }}
+            >
+              <InputBase
+                sx={{
+                  ml: 1,
+                  flex: 1,
+                  fontSize: '15px',
+                  with: '100%',
+                  height: 'fit-content'
+                }}
+                placeholder="Write something now"
+                inputProps={{ 'aria-label': 'Write something now' }}
+                inputRef={textInput}
+                multiline
+              />
+              {/* <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" /> */}
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <IconButton sx={{ p: '10px' }}>
+                  <Camera fill={color.iconNotSvg} size={16} />
+                </IconButton>
+              </Box>
+            </Box>
           </Box>
         </Box>
       </Box>

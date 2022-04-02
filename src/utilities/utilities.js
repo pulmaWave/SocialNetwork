@@ -65,7 +65,6 @@ const getListQueryPost = (setLoading, setPosts, query) => {
       });
     });
     setPosts(arr);
-    console.log('list post travel: ', arr);
     setLoading(false);
   });
 };

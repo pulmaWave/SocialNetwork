@@ -5,6 +5,8 @@ module.exports = {
     white: '#ffffff',
     color: '#0f172a',
     main: '#075985',
+    iconNotSvg: '#6b7280',
+    mainRed: '#b91c1c',
     mainHover: '#0c4a6e',
     icons: '#6b7280',
     bgcolor: '#f3f4f6',

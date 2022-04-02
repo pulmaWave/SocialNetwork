@@ -2,12 +2,12 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import avatar from '../assets/images/avt.jpg';
 import colors from '../assets/style/GlobalStyles';
+import EarthSvg from '../components/icons/EarthSvg';
 
 const color = colors.colors;
 
-const UserPost = () => {
+const UserPost = (time) => {
   const displayName = localStorage.getItem('userName');
-
   return (
     <Box
       sx={{
@@ -52,11 +52,14 @@ const UserPost = () => {
             {displayName ? displayName : 'User name is loading'}
           </Box>
         </Typography>
-        <Typography component="div">
-          <Box sx={{ fontSize: 13, color: `${color.gray[500]}` }}>
-            10 hours ago
-          </Box>
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography component="div">
+            <Box sx={{ fontSize: 13, color: `${color.gray[500]}`, mr: '5px' }}>
+              {time.time}
+            </Box>
+          </Typography>
+          <EarthSvg fill={color.icons} size={12} />
+        </Box>
       </Box>
     </Box>
   );

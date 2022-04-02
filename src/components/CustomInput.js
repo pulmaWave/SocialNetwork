@@ -1,67 +1,38 @@
 import * as React from 'react';
-import InputUnstyled from '@mui/base/InputUnstyled';
-import { styled } from '@mui/system';
-import { InputAdornment } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { Box } from '@mui/material';
+import InputBase from '@mui/material/InputBase';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Camera from '../components/icons/CameraSvg';
+import colors from '../assets/style/GlobalStyles';
 
-const grey = {
-  50: '#F3F6F9',
-  100: '#E7EBF0',
-  200: '#E0E3E7',
-  300: '#CDD2D7',
-  400: '#B2BAC2',
-  500: '#A0AAB4',
-  600: '#6F7E8C',
-  700: '#3E5060',
-  800: '#2D3843',
-  900: '#1A2027'
+const color = colors.colors;
+
+const CustomizedInputBase = (handleBtnCmt) => {
+  let textInput = React.useRef(null);
+  return (
+    <Box
+      sx={{
+        p: '2px 4px',
+        display: 'flex',
+        alignItems: 'center',
+        width: '100%',
+        borderRadius: '50px',
+        bgcolor: `${color.bgcolor}`
+      }}
+    >
+      <InputBase
+        sx={{ ml: 1, flex: 1, fontSize: '15px' }}
+        placeholder="Write something now"
+        inputProps={{ 'aria-label': 'search google maps' }}
+        inputRef={textInput}
+      />
+      <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
+      <IconButton sx={{ p: '10px' }}>
+        <Camera fill={color.iconNotSvg} size={16} />
+      </IconButton>
+    </Box>
+  );
 };
 
-const StyledInputElement = styled('input')(
-  ({ theme }) => `
-  width: 240px;
-  font-size: 0.875rem;
-  font-family: IBM Plex Sans, sans-serif;
-  font-weight: 400;
-  color: ${theme.palette.mode === 'dark' ? grey[300] : grey[900]};
-  background: ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
-  border: 1px solid ${theme.palette.mode === 'dark' ? grey[800] : grey[300]};
-  border-radius: 50px;
-  margin-left: 10px;
-  padding: 12px 12px;
-  transition: all 150ms ease;
-
-  &:hover {
-    background: ${theme.palette.mode === 'dark' ? '' : grey[100]};
-    border-color: ${theme.palette.mode === 'dark' ? grey[700] : grey[400]};
-  }
- 
-  &:focus {
-    outline: none;
-  }
-`
-);
-
-const CustomInput = React.forwardRef(function CustomInput(props, ref) {
-  return (
-    <InputUnstyled
-      components={{ Input: StyledInputElement }}
-      {...props}
-      ref={ref}
-      startAdornment={
-        <InputAdornment>
-          <SearchIcon />
-        </InputAdornment>
-      }
-    ></InputUnstyled>
-  );
-});
-
-export default function UnstyledInput() {
-  return (
-    <CustomInput
-      aria-label="Demo input"
-      placeholder="Search on Social network"
-    />
-  );
-}
+export default CustomizedInputBase;
