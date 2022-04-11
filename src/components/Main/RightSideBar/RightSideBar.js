@@ -1,15 +1,15 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-
+import Divider from '@mui/material/Divider';
 import Ads from '../SideBar/Ads';
-import ListFollowing from './ListFollowing';
+import ListFriend from './ListFriend';
 import colors from '../../../assets/style/GlobalStyles';
 
 const RightSideBar = () => {
   return (
     <Box
       sx={{
-        p: '40px 0 10px 40px',
+        p: '40px 10px 10px 10px',
         height: 'calc(100vh - 112px)',
         overflow: 'auto',
         visibility: 'hidden',
@@ -33,15 +33,14 @@ const RightSideBar = () => {
         <Typography variant="caption">Sponsored</Typography>
         <Ads />
       </Box>
-      <Box
+      <Divider
         sx={{
-          borderBottom: `1px solid ${colors.colors.gray[500]}`,
-          marginBottom: '20px',
+          m: '5px',
           visibility: 'visible'
         }}
       />
       <Box sx={{ visibility: 'visible' }}>
-        <ListFollowing />
+        <ListFriend />
       </Box>
     </Box>
   );

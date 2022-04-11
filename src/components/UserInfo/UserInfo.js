@@ -1,56 +1,51 @@
 import * as React from 'react';
-import avatar from '../../assets/images/avt.jpg';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, CardMedia } from '@mui/material';
 import { Link } from 'react-router-dom';
+import colors from '../../assets/style/GlobalStyles';
+
+const color = colors.colors;
 
 const UserInfo = (props) => {
-  const displayName = localStorage.getItem('userName');
   return (
-    <Box sx={{ marginBottom: '10px' }}>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          paddingLeft: props.paddingLeft ? props.paddingLeft : ''
-        }}
-      >
+    <Box>
+      <Link to="/profile" style={{ textDecoration: 'none', color: 'unset' }}>
         <Box
           sx={{
-            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            paddingLeft: props.paddingLeft ? props.paddingLeft : '',
+            borderRadius: '6px',
+            p: '7px',
             ':hover': {
-              cursor: 'pointer',
-              boxShadow: 4
+              bgcolor: `${color.btnBgColor}`,
+              cursor: 'pointer'
             }
           }}
         >
-          <img
-            src={avatar}
-            alt="profile images"
-            style={{
-              width: '32px',
-              height: '32px',
-              borderRadius: '50%',
-              display: 'flex',
-              objectFit: 'cover'
-            }}
-          />
-        </Box>
-        <Link to="/profile" style={{ textDecoration: 'none', color: 'unset' }}>
-          <Typography
-            variant="body1"
+          <Box
             sx={{
-              textTransform: 'capitalize',
-              marginLeft: '10px',
-              cursor: 'pointer',
-              ':hover': {
-                textDecoration: 'underline'
-              }
+              borderRadius: '50%'
             }}
           >
-            {displayName ? displayName : 'User name is loading'}
+            <CardMedia
+              component="img"
+              height="32px"
+              image={props.image}
+              alt="avatar"
+              sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
+            />
+          </Box>
+          <Typography
+            sx={{
+              fontSize: '15px',
+              textTransform: 'capitalize',
+              marginLeft: '10px'
+            }}
+          >
+            {props.displayName ? props.displayName : 'User name is loading'}
           </Typography>
-        </Link>
-      </Box>
+        </Box>
+      </Link>
     </Box>
   );
 };

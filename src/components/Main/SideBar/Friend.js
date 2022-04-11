@@ -1,6 +1,9 @@
 import React from 'react';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import { Box, Typography } from '@mui/material';
+import colors from '../../../assets/style/GlobalStyles';
+
+const color = colors.colors;
 
 const Friend = () => {
   return (
@@ -8,7 +11,12 @@ const Friend = () => {
       sx={{
         display: 'flex',
         alignItems: 'center',
-        marginBottom: '10px'
+        borderRadius: '5px',
+        p: '6px',
+        ':hover': {
+          bgcolor: `${color.btnBgColor}`,
+          cursor: 'pointer'
+        }
       }}
     >
       <SupervisedUserCircleIcon
@@ -16,22 +24,11 @@ const Friend = () => {
           width: '32px',
           height: '32px',
           marginRight: '10px',
-          borderRadius: '50%',
-          cursor: 'pointer',
-          ':hover': {
-            boxShadow: 3
-          }
+          borderRadius: '50%'
         }}
       />
-      <Typography
-        sx={{
-          cursor: 'pointer',
-          ':hover': {
-            textDecoration: 'underline'
-          }
-        }}
-      >
-        Friend
+      <Typography component="div">
+        <Box sx={{ fontSize: '15px' }}>Friends</Box>
       </Typography>
     </Box>
   );

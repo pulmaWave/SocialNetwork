@@ -30,7 +30,6 @@ const main = () => {
           [theme.breakpoints.up('sideBarNone')]: {
             justifyContent: 'space-between'
           },
-          padding: '0 30px ',
           [theme.breakpoints.down('mb')]: {
             padding: 'unset'
           },
@@ -51,7 +50,7 @@ const main = () => {
           <Box
             sx={{ display: { xs: 'none', rightBarNone: 'block', width: 300 } }}
           >
-            <Box sx={{ position: 'fixed', width: 'inherit' }}>
+            <Box sx={{ position: 'fixed', width: 'inherit', right: 0 }}>
               <RightSideBar />
             </Box>
           </Box>

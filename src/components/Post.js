@@ -1,26 +1,38 @@
 import { React, useEffect, useState, useRef } from 'react';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, CardMedia } from '@mui/material';
 import { Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import {
-  CheckBoxOutlineBlank,
   LocalFireDepartment,
   Sms,
-  TextSnippetOutlined,
   WifiProtectedSetup
 } from '@mui/icons-material';
-import CustomInput from '../components/CustomInput';
 import InputBase from '@mui/material/InputBase';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Camera from '../components/icons/CameraSvg';
 
 import UserPost from './UserPost';
 import colors from '../assets/style/GlobalStyles';
-import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import {
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  collection,
+  addDoc,
+  getDocs,
+  serverTimestamp,
+  query,
+  orderBy,
+  limit
+} from 'firebase/firestore';
 import { db } from '../config/firebase';
-import { getDocById } from '../utilities/utilities';
+import {
+  getDocById,
+  getSubCollection,
+  getSubColRTime
+} from '../utilities/utilities';
 import moment from 'moment';
 
 const color = colors.colors;
@@ -29,8 +41,7 @@ const theme = createTheme({
     values: {
       xs: 0,
       mb: 480,
-      md: 650,
-      large: 1440
+      md: 650
     }
   }
 });
@@ -70,9 +81,39 @@ const boxShow = {
   p: '10px 20px'
 };
 
-const fillComment = {
-  p: '10px',
-  borderRadius: '50px'
+const Comment = (props) => {
+  return (
+    <Box sx={{ p: '10px 20px' }}>
+      <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+        <CardMedia
+          component="img"
+          height="32px"
+          image={props.avt}
+          alt="avatar"
+          sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
+        />
+        <Box
+          sx={{
+            p: '8px 12px',
+            width: '100%',
+            borderRadius: '18px',
+            bgcolor: `${color.bgcolor}`
+          }}
+        >
+          <Typography component="div">
+            <Box sx={{ fontSize: '15px', fontWeight: 'bold' }}>
+              {props.userName}
+            </Box>
+          </Typography>
+          <Typography component="div">
+            <Box sx={{ fontSize: '15px', wordBreak: 'break-word' }}>
+              {props.comment}
+            </Box>
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
+  );
 };
 
 const uid = localStorage.getItem('uid');
@@ -90,11 +131,13 @@ const Post = ({
 }) => {
   let postTime = moment(createAt.seconds * 1000)
     .startOf('seconds')
-    .toNow();
+    .fromNow();
   let textInput = useRef(null);
   const [vote, setVote] = useState();
   const [counterVotePost, setCounterVotePost] = useState();
   const [commentAct, setCommentAct] = useState(false);
+  const [commentMessage, setCommentMessage] = useState('');
+  const [listCmt, setListCmt] = useState([]);
   const contentRef = doc(db, 'posts', id);
   const avt = localStorage.getItem('avt');
   useEffect(() => {
@@ -104,11 +147,26 @@ const Post = ({
       setVote(voted);
       setCounterVotePost(counterVote);
     });
-    // get information user
-    getDocById('users', uid).then(async (data) => {
-      localStorage.setItem('avt', data.image);
-    });
   }, [id]);
+
+  useEffect(() => {
+    const subColRef = query(
+      collection(db, 'posts', `${id}`, 'comments'),
+      orderBy('createAt', 'asc'),
+      limit(1)
+    );
+    // getSubCollection(subColRef, setListCmt);
+    getDocs(subColRef).then((res) => {
+      let arr = [];
+      res.forEach((doc) => {
+        arr.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      setListCmt(arr);
+    });
+  }, []);
 
   const handleClickVote = async () => {
     const data = await getDocById('posts', id);
@@ -116,14 +174,13 @@ const Post = ({
     setCounterVotePost(counterVote);
     // check uid (user) vote yet?
     const voted = await data.voteBy.some((value) => value === uid);
-
+    setVote(!vote);
     // update vote and counter vote of post
     if (!voted) {
       await updateDoc(contentRef, {
         voteBy: arrayUnion(uid),
         counterVote: counterVote + 1
       });
-      setVote(!vote);
       const data = await getDocById('posts', id);
       setCounterVotePost(data.counterVote);
     } else {
@@ -131,28 +188,59 @@ const Post = ({
         voteBy: arrayRemove(uid),
         counterVote: counterVote - 1
       });
-      setVote(!vote);
       const data = await getDocById('posts', id);
       setCounterVotePost(data.counterVote);
     }
   };
 
   // handle button comment
-  const handleBtnCmt = () => {
+  const handleBtnCmt = async () => {
     setCommentAct(true);
     setTimeout(() => {
       textInput.current.focus();
     }, 100);
+    const subColRef = query(
+      collection(db, 'posts', `${id}`, 'comments'),
+      orderBy('createAt', 'asc')
+    );
+    // getSubCollection(subColRef, setListCmt);
+    getSubCollection(subColRef, setListCmt);
   };
+
+  // event post comment
+  const handleComment = async () => {
+    try {
+      await addDoc(collection(db, `posts/${id}/comments`), {
+        comment: { commentMessage },
+        createAt: serverTimestamp(),
+        uid: { uid }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // handle post comment
+  const handleKeyDownCmt = (event) => {
+    // handle press enter event
+    if (event.key === 'Enter' && !event.shiftKey) {
+      // disable newline when press enter and still allow shift + enter
+      // to add new line in input base
+      event.preventDefault();
+      // check value input comment # null
+      if (commentMessage !== '') {
+        //post comment
+        handleComment();
+        //clear input comment
+        setCommentMessage('');
+      }
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box
         sx={{
-          width: 600,
-          [theme.breakpoints.down('large')]: {
-            width: 500,
-            maxWidth: '90vw'
-          },
+          width: 500,
           border: `${color.gray[100]} 1px solid`,
           borderRadius: '5px',
           [theme.breakpoints.down('mb')]: {
@@ -184,43 +272,47 @@ const Post = ({
           >
             <Box sx={{ fontSize: 15 }}>{content}</Box>
           </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              padding: '0 10px',
-              mb: '10px',
-              color: `${color.sky[800]}`
-            }}
-          >
-            <LocalOfferIcon sx={{ width: '18px', height: '18px', mr: '3px' }} />
-            <Typography>:</Typography>
+          {tags.length > 0 && (
             <Box
               sx={{
-                display: 'flex'
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0 10px',
+                mb: '10px',
+                color: `${color.sky[800]}`
               }}
             >
-              {tags.length > 0 &&
-                tags.map((tag, index) => {
-                  return (
-                    <Typography
-                      key={index}
-                      component="div"
-                      sx={{
-                        ml: '10px',
-                        bgcolor: `${color.main}`,
-                        color: `${color.white}`,
-                        padding: '0 10px',
-                        borderRadius: '50px',
-                        fontStyle: 'italic'
-                      }}
-                    >
-                      <Box sx={{ fontSize: 15 }}>{tag}</Box>
-                    </Typography>
-                  );
-                })}
+              <LocalOfferIcon
+                sx={{ width: '18px', height: '18px', mr: '3px' }}
+              />
+              <Typography>:</Typography>
+              <Box
+                sx={{
+                  display: 'flex'
+                }}
+              >
+                {tags.length > 0 &&
+                  tags.map((tag, index) => {
+                    return (
+                      <Typography
+                        key={index}
+                        component="div"
+                        sx={{
+                          ml: '10px',
+                          bgcolor: `${color.main}`,
+                          color: `${color.white}`,
+                          padding: '0 10px',
+                          borderRadius: '50px',
+                          fontStyle: 'italic'
+                        }}
+                      >
+                        <Box sx={{ fontSize: 15 }}>{tag}</Box>
+                      </Typography>
+                    );
+                  })}
+              </Box>
             </Box>
-          </Box>
+          )}
           {url && (
             <ThemeProvider theme={theme}>
               <Box
@@ -257,7 +349,6 @@ const Post = ({
                 <LocalFireDepartment sx={voted} />
               </Box>
               <Typography
-                variant="body1"
                 component="div"
                 sx={{
                   color: `${color.gray[500]}`,
@@ -348,19 +439,28 @@ const Post = ({
             </Button>
           </Box>
         </Box>
+        <Box>
+          {listCmt.length > 0 &&
+            listCmt.map((data) => {
+              return (
+                <Comment
+                  key={data.id}
+                  avt="asdasd"
+                  userName="Lucas Nguyen"
+                  comment={data.comment.commentMessage}
+                />
+              );
+            })}
+        </Box>
         <Box sx={commentAct ? boxShow : boxNone}>
           <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-            <img
-              src={avt}
+            <CardMedia
+              component="img"
+              height="32px"
+              image={avt}
               alt="avatar"
-              width="32"
-              height="32"
-              style={{ borderRadius: '50%', marginRight: '10px' }}
+              sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
             />
-            {/* <CustomInput
-              placeholder="Write something"
-              handleBtnCmt={handleBtnCmt}
-            /> */}
             <Box
               sx={{
                 p: '2px 4px',
@@ -382,6 +482,11 @@ const Post = ({
                 inputProps={{ 'aria-label': 'Write something now' }}
                 inputRef={textInput}
                 multiline
+                onKeyDown={handleKeyDownCmt}
+                onChange={(event) => {
+                  setCommentMessage(event.target.value);
+                }}
+                value={commentMessage}
               />
               {/* <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" /> */}
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>

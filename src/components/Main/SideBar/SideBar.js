@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box } from '@mui/material';
-
+import Divider from '@mui/material/Divider';
 import UserInfo from '../../UserInfo/UserInfo';
 import Friend from './Friend';
 import Save from './Save';
@@ -11,7 +11,7 @@ const SideBar = () => {
   return (
     <Box
       sx={{
-        p: '40px 20px 10px 0',
+        p: '40px 10px 10px 15px',
         height: 'calc(100vh - 112px)',
         overflow: 'auto',
         visibility: 'hidden',
@@ -40,10 +40,9 @@ const SideBar = () => {
       <Box sx={{ visibility: 'visible' }}>
         <Save />
       </Box>
-      <Box
+      <Divider
         sx={{
-          borderBottom: `1px solid ${colors.colors.gray[500]}`,
-          marginBottom: '20px',
+          m: '5px 0',
           visibility: 'visible'
         }}
       />

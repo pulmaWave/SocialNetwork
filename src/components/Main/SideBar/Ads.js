@@ -7,26 +7,47 @@ const color = colors.colors;
 
 const Ads = () => {
   return (
-    <Box sx={{ display: 'flex', marginBottom: '10px' }}>
-      <Box sx={{ marginRight: '10px', cursor: 'pointer' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        p: '7px',
+        borderRadius: '6px',
+        cursor: 'pointer',
+        ':hover': { bgcolor: `${color.btnBgColor}` }
+      }}
+    >
+      <Box
+        sx={{
+          marginRight: '10px',
+          cursor: 'pointer',
+          bgcolor: `${color.white}`,
+          borderRadius: '7px',
+          width: '100px',
+          height: '100px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
         <img
-          style={{ borderRadius: '8px' }}
+          style={{ objectFit: 'cover', display: 'flex' }}
           src={ads}
           alt="advertise images"
-          width={'150px'}
-          height={'75px'}
+          width={'100px'}
         />
       </Box>
-      <Box>
-        <Typography sx={{ marginBottom: '10px' }}>Penthouse</Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center'
+        }}
+      >
+        <Typography sx={{ fontSize: '15px' }}>Penthouse in Dalat</Typography>
         <Typography
           sx={{
-            fontSize: '14px',
-            color: `${color.gray[400]}`,
-            ':hover': {
-              cursor: 'pointer',
-              textDecoration: 'underline'
-            }
+            fontSize: '13px',
+            color: `${color.gray[400]}`
           }}
         >
           dallas.com

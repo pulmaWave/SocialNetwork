@@ -3,13 +3,14 @@ import Post from '../../components/Post';
 import Loading from '../../layout/Loading';
 import { Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getDocs, collection } from 'firebase/firestore';
+import { getDocs, collection, orderBy, query } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { addListPost } from '../../redux/action/actions';
 import { listPostSelector } from '../../redux/selector';
 // import { getCollection } from '../../utilities/utilities';
 import ShowCreatePost from '../../components/ShowCreatePost';
+import { getDocById } from '../../utilities/utilities';
 
 const theme = createTheme({
   breakpoints: {
@@ -29,18 +30,24 @@ const ListPost = () => {
 
   useEffect(() => {
     setLoading(true);
-    getDocs(collection(db, 'posts')).then((res) => {
-      let arr = [];
-      res.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
-        arr.push({
-          id: doc.id,
-          ...doc.data()
+    getDocs(query(collection(db, 'posts'), orderBy('createAt', 'desc'))).then(
+      (res) => {
+        let arr = [];
+        res.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          arr.push({
+            id: doc.id,
+            ...doc.data()
+          });
         });
-      });
-      //send data to store redux
-      dispatch(addListPost(arr));
-      setLoading(false);
+        //send data to store redux
+        dispatch(addListPost(arr));
+        setLoading(false);
+      }
+    );
+    // get information user
+    getDocById('users', localStorage.getItem('uid')).then((data) => {
+      localStorage.setItem('avt', data.image);
     });
   }, []);
 

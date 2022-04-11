@@ -26,7 +26,7 @@ const UserPost = (time) => {
       >
         <img
           src={avatar}
-          alt="avatar pictures"
+          alt=""
           style={{
             borderRadius: '50%',
             display: 'flex',
@@ -42,10 +42,7 @@ const UserPost = (time) => {
           sx={{
             textTransform: 'capitalize',
             fontWeight: 'bold',
-            cursor: 'pointer',
-            ':hover': {
-              textDecoration: 'underline'
-            }
+            cursor: 'pointer'
           }}
         >
           <Box sx={{ fontSize: 15 }}>

@@ -3,12 +3,9 @@ import Post from '../../components/Post';
 import Loading from '../../layout/Loading';
 import { Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import CreatePost from '../../components/ShowCreatePost';
-import { collection, query, where } from 'firebase/firestore';
+import { collection, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { getListQueryPost } from '../../utilities/utilities';
-import * as dayjs from 'dayjs';
-import 'dayjs/locale/zh-cn'; // import locale
 
 const theme = createTheme({
   breakpoints: {
@@ -25,7 +22,8 @@ const ListBeauty = () => {
   const [loading, setLoading] = useState(false);
   const qBeauty = query(
     collection(db, 'posts'),
-    where('tags', 'array-contains', 'beauty')
+    where('tags', 'array-contains', 'beauty'),
+    orderBy('createAt', 'desc')
   );
   useEffect(() => {
     getListQueryPost(setLoading, setPosts, qBeauty);
@@ -54,7 +52,6 @@ const ListBeauty = () => {
             }
           }}
         >
-          <CreatePost />
           {posts.length > 0 &&
             posts.map((post) => {
               return (

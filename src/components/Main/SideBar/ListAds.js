@@ -10,14 +10,6 @@ const ListAds = () => {
       <Ads />
       <Ads />
       <Ads />
-      <Ads />
-      <Ads />
-      <Ads />
-      <Ads />
-      <Ads />
-      <Ads />
-      <Ads />
-      <Ads />
     </Box>
   );
 };

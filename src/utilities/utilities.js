@@ -1,19 +1,13 @@
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth, provider } from '../config/firebase';
 import {
   doc,
   getDoc,
   getDocs,
   collection,
-  addDoc,
   setDoc,
-  query,
-  orderBy,
-  where
+  onSnapshot
 } from 'firebase/firestore';
 
 import { db } from '../config/firebase';
-import { display } from '@mui/system';
 
 //get list collection from firebase
 const getCollection = async (collectionName) => {
@@ -79,4 +73,41 @@ const getDocById = async (collection, id) => {
   }
 };
 
-export { getCollection, addUser, getListQueryPost, getDocById };
+//get sub collection
+// collection/document/sub_collection
+const getSubCollection = async (subColRef, setSubClt) => {
+  // const subColRef = collection(db, collectionName, document, subCollection);
+  getDocs(subColRef).then((res) => {
+    let arr = [];
+    res.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      arr.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+    setSubClt(arr);
+  });
+};
+const getSubColRTime = async (subColRef, setSubClt) => {
+  // const subColRef = collection(db, collectionName, document, subCollection);
+  let arr = [];
+  onSnapshot(subColRef, (querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      arr.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+    setSubClt(arr);
+  });
+};
+
+export {
+  getCollection,
+  addUser,
+  getListQueryPost,
+  getDocById,
+  getSubCollection,
+  getSubColRTime
+};
