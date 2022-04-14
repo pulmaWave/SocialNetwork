@@ -137,6 +137,8 @@ export default function KeepMountedModal() {
   const [selectedImage, setSelectedImage] = React.useState(null);
   const [imageUrl, setImageUrl] = React.useState(null);
   const dispatch = useDispatch();
+  const userName = localStorage.getItem('userName');
+  const avt = localStorage.getItem('avt');
 
   //list tag from redux
   const tags = useSelector(setTagPost);
@@ -275,7 +277,7 @@ export default function KeepMountedModal() {
                 X
               </button>
             </Box>
-            <UserInfo paddingLeft={'10px'} />
+            <UserInfo paddingLeft={'10px'} displayName={userName} image={avt} />
             <Box
               component="form"
               sx={{

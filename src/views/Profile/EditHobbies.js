@@ -2,13 +2,10 @@ import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import colors from '../../assets/style/GlobalStyles';
 import EditIcon from '../../components/icons/PencilSvg';
-import HomeSvg from '../../components/icons/HomeSvg';
-import HeartSvg from '../../components/icons/HeartSvg';
-import WatchSvg from '../../components/icons/WatchSvg';
 
 const color = colors.colors;
 
-const EditHobbies = () => {
+const EditHobbies = (check) => {
   const btnEditProfile = {
     mt: '10px',
     fontSize: '15px',
@@ -23,13 +20,6 @@ const EditHobbies = () => {
     }
   };
 
-  const component = {
-    display: 'flex',
-    alignItems: 'center',
-    mb: 1,
-    p: '8px 0 8px 0'
-  };
-
   const tag = {
     fontSize: '15px',
     fontWeight: 'bold',
@@ -37,12 +27,11 @@ const EditHobbies = () => {
     color: `${color.color}`,
     padding: '5px 13px',
     border: `0.5px solid ${color.btnBgColor}`,
-    borderRadius: '50px',
-    fontStyle: 'italic'
+    borderRadius: '50px'
   };
 
   return (
-    <Box sx={{ mt: 2 }}>
+    <Box>
       <Box
         sx={{
           display: 'flex',
@@ -71,12 +60,14 @@ const EditHobbies = () => {
           <Box sx={tag}>Film</Box>
         </Typography>
       </Box>
-      <Button sx={btnEditProfile}>
-        <Box sx={{ mr: 1, display: 'flex', alignItems: 'center' }}>
-          <EditIcon fill={color.white} size={16} />
-        </Box>
-        Edit hobbies
-      </Button>
+      {check.check && (
+        <Button sx={btnEditProfile}>
+          <Box sx={{ mr: 1, display: 'flex', alignItems: 'center' }}>
+            <EditIcon fill={color.white} size={16} />
+          </Box>
+          Edit hobbies
+        </Button>
+      )}
     </Box>
   );
 };

@@ -58,6 +58,7 @@ const ListPostTravel = () => {
                 <Post
                   id={post?.id}
                   key={post?.id}
+                  uidPost={post?.uid}
                   content={post?.content?.isContent}
                   url={post?.imageUrl?.url}
                   tags={post?.tags}

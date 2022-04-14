@@ -6,9 +6,13 @@ import colors from '../../assets/style/GlobalStyles';
 const color = colors.colors;
 
 const UserInfo = (props) => {
+  const uid = localStorage.getItem('uid');
   return (
     <Box>
-      <Link to="/profile" style={{ textDecoration: 'none', color: 'unset' }}>
+      <Link
+        to={`/profile=${uid}`}
+        style={{ textDecoration: 'none', color: 'unset' }}
+      >
         <Box
           sx={{
             display: 'flex',
@@ -32,7 +36,7 @@ const UserInfo = (props) => {
               height="32px"
               image={props.image}
               alt="avatar"
-              sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
+              sx={{ borderRadius: '50%', width: '32px' }}
             />
           </Box>
           <Typography

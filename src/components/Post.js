@@ -28,12 +28,11 @@ import {
   limit
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
-import {
-  getDocById,
-  getSubCollection,
-  getSubColRTime
-} from '../utilities/utilities';
+import { getDocById, getSubColRTime } from '../utilities/utilities';
 import moment from 'moment';
+import Male from '../assets/images/avatarMale.jpg';
+import Female from '../assets/images/girl.png';
+import { Link } from 'react-router-dom';
 
 const color = colors.colors;
 const theme = createTheme({
@@ -82,16 +81,41 @@ const boxShow = {
 };
 
 const Comment = (props) => {
+  const [user, setUser] = useState('');
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    try {
+      getDocById('users', props.uid).then((data) => {
+        setLoading(true);
+        setUser(data);
+      });
+    } catch (error) {
+      console.log('get doc by id error', error);
+    }
+  }, [props.uid]);
   return (
     <Box sx={{ p: '10px 20px' }}>
       <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-        <CardMedia
-          component="img"
-          height="32px"
-          image={props.avt}
-          alt="avatar"
-          sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
-        />
+        <Link
+          to={`/profile=${props.uid}`}
+          style={{
+            textDecoration: 'none',
+            color: 'unset',
+            '&:hover': {
+              cursor: 'pointer',
+              textDecoration: 'underline'
+            }
+          }}
+        >
+          <CardMedia
+            component="img"
+            height="32px"
+            image={user.image}
+            src={Male}
+            alt="avatar"
+            sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
+          />
+        </Link>
         <Box
           sx={{
             p: '8px 12px',
@@ -100,11 +124,30 @@ const Comment = (props) => {
             bgcolor: `${color.bgcolor}`
           }}
         >
-          <Typography component="div">
-            <Box sx={{ fontSize: '15px', fontWeight: 'bold' }}>
-              {props.userName}
-            </Box>
-          </Typography>
+          <Link
+            to={`/profile=${props.uid}`}
+            style={{
+              textDecoration: 'none',
+              color: 'unset',
+              '&:hover': {
+                cursor: 'pointer'
+              }
+            }}
+          >
+            <Typography component="div">
+              <Box
+                sx={{
+                  fontSize: '15px',
+                  fontWeight: 'bold',
+                  ':hover': {
+                    textDecoration: 'underline'
+                  }
+                }}
+              >
+                {user.userName}
+              </Box>
+            </Typography>
+          </Link>
           <Typography component="div">
             <Box sx={{ fontSize: '15px', wordBreak: 'break-word' }}>
               {props.comment}
@@ -121,13 +164,12 @@ const uid = localStorage.getItem('uid');
 const Post = ({
   content,
   url,
-  checkVote,
-  comment,
   tags,
   id,
   voteBy,
   counterVote,
-  createAt
+  createAt,
+  uidPost
 }) => {
   let postTime = moment(createAt.seconds * 1000)
     .startOf('seconds')
@@ -138,6 +180,7 @@ const Post = ({
   const [commentAct, setCommentAct] = useState(false);
   const [commentMessage, setCommentMessage] = useState('');
   const [listCmt, setListCmt] = useState([]);
+  const [loaded, setLoaded] = useState(false);
   const contentRef = doc(db, 'posts', id);
   const avt = localStorage.getItem('avt');
   useEffect(() => {
@@ -150,6 +193,7 @@ const Post = ({
   }, [id]);
 
   useEffect(() => {
+    //show 1 comment then page render
     const subColRef = query(
       collection(db, 'posts', `${id}`, 'comments'),
       orderBy('createAt', 'asc'),
@@ -204,7 +248,7 @@ const Post = ({
       orderBy('createAt', 'asc')
     );
     // getSubCollection(subColRef, setListCmt);
-    getSubCollection(subColRef, setListCmt);
+    getSubColRTime(subColRef, setListCmt);
   };
 
   // event post comment
@@ -258,7 +302,7 @@ const Post = ({
               p: '12px 15px'
             }}
           >
-            <UserPost time={postTime} />
+            <UserPost time={postTime} uidPost={uidPost} />
           </Box>
         </ThemeProvider>
         <Box>
@@ -445,7 +489,7 @@ const Post = ({
               return (
                 <Comment
                   key={data.id}
-                  avt="asdasd"
+                  uid={data.uid.uid}
                   userName="Lucas Nguyen"
                   comment={data.comment.commentMessage}
                 />
@@ -454,13 +498,27 @@ const Post = ({
         </Box>
         <Box sx={commentAct ? boxShow : boxNone}>
           <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-            <CardMedia
-              component="img"
-              height="32px"
-              image={avt}
-              alt="avatar"
-              sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
-            />
+            {loaded ? (
+              <CardMedia
+                component="img"
+                height="32px"
+                image={avt}
+                onLoad={() => {
+                  setLoaded(true);
+                }}
+                alt="avatar"
+                sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
+              />
+            ) : (
+              <CardMedia
+                component="img"
+                height="32px"
+                image={Male}
+                onLoad
+                alt="avatar"
+                sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
+              />
+            )}
             <Box
               sx={{
                 p: '2px 4px',

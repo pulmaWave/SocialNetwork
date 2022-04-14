@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import Divider from '@mui/material/Divider';
 import UserInfo from '../../UserInfo/UserInfo';
@@ -6,8 +6,22 @@ import Friend from './Friend';
 import Save from './Save';
 import ListAds from './ListAds';
 import colors from '../../../assets/style/GlobalStyles';
+import Male from '../../../assets/images/avatarMale.jpg';
+import Female from '../../../assets/images/girl.png';
+import { getDocById } from '../../../utilities/utilities';
+import Loading from '../../../layout/loadingUser';
 
 const SideBar = () => {
+  const uid = localStorage.getItem('uid');
+  const [user, setUser] = useState('');
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    setLoading(true);
+    getDocById('users', uid).then((data) => {
+      setUser(data);
+      setLoading(false);
+    });
+  }, [uid]);
   return (
     <Box
       sx={{
@@ -32,7 +46,14 @@ const SideBar = () => {
       }}
     >
       <Box sx={{ visibility: 'visible' }}>
-        <UserInfo />
+        {loading ? (
+          <Loading />
+        ) : (
+          <UserInfo
+            image={user?.image || 1 > 0 ? Male : Female}
+            displayName={user.userName}
+          />
+        )}
       </Box>
       <Box sx={{ visibility: 'visible' }}>
         <Friend />

@@ -1,25 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import './profile.css';
 
 import AppBar from '../../components/NavBar/AppBar';
 import coverPicture from '../../assets/images/coverPhoto.jpg';
-import avatarPr from '../../assets/images/avt.jpg';
 import colors from '../../assets/style/GlobalStyles';
-import ListPost from '../Home/ListPost';
+import ListPostProfile from '../Profile/ListPostProfile';
 import EditIcon from '../../components/icons/PencilSvg';
+import UserPlusSvg from '../../components/icons/UserPlusSvg';
 import Bio from './Bio';
 import EditDetails from './EditDetails';
 import EditHobbies from './EditHobbies';
 import ShowFriendIcons from '../../components/ShowFriendIcons';
-import video1 from '../../assets/React App - Google Chrome 2022-02-09 12-02-34.mp4';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import IconsBar from '../../theme/IconsBar';
 import gift from '../../assets/images/giphy.gif';
+import { useParams } from 'react-router-dom';
+import { getDocById } from '../../utilities/utilities';
 
 const color = colors.colors;
 
@@ -37,6 +34,20 @@ const theme = createTheme({
 });
 
 const Profile = () => {
+  const params = useParams();
+  const userId = params.userId;
+  const [user, setUser] = useState('');
+  const [checkUser, setCheckUser] = useState(false);
+  const uidLogged = localStorage.getItem('uid');
+  useEffect(() => {
+    getDocById('users', userId).then((data) => {
+      setUser(data);
+    });
+    if (userId === uidLogged) {
+      setCheckUser(true);
+    } else setCheckUser(false);
+  }, [userId]);
+
   const header = {
     display: 'flex',
     flexDirection: 'column',
@@ -135,8 +146,6 @@ const Profile = () => {
     }
   };
 
-  const wrapContentLeft = {};
-
   const contentLeft = {
     position: 'sticky',
     top: '80px',
@@ -145,6 +154,9 @@ const Profile = () => {
   };
 
   const introduce = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '16px',
     borderRadius: '5px',
     height: 'fit-content',
     boxShadow: 3,
@@ -152,9 +164,6 @@ const Profile = () => {
     p: '15px',
     boxSizing: 'border-box',
     bgcolor: `${color.white}`,
-    ':-webkit-scrollbar': {
-      display: 'none'
-    },
     [theme.breakpoints.down('m900')]: {
       maxWidth: 500
     }
@@ -203,11 +212,13 @@ const Profile = () => {
                     <img src={gift} alt="abc" style={avt} />
                   </Box>
                   <Box sx={nameFriends}>
-                    <Typography variant="h4" component="div">
-                      <Box sx={{ fontWeight: 'bold' }}>Nguyễn Công Thịnh</Box>
+                    <Typography component="div">
+                      <Box sx={{ fontWeight: 'bold', fontSize: '24px' }}>
+                        {user.userName}
+                      </Box>
                     </Typography>
                     <Typography variant="body" component="div">
-                      <Box sx={{ textAlign: 'left' }}>( Bunmamkey )</Box>
+                      <Box sx={{ textAlign: 'left' }}>( {user.userName} )</Box>
                     </Typography>
                     <ShowFriendIcons />
                   </Box>
@@ -221,12 +232,25 @@ const Profile = () => {
                     justifyContent: 'end'
                   }}
                 >
-                  <Button sx={btnEditProfile}>
-                    <Box sx={{ mr: 1, display: 'flex', alignItems: 'center' }}>
-                      <EditIcon fill={color.white} size={16} />
-                    </Box>
-                    Edit Profile
-                  </Button>
+                  {checkUser === true ? (
+                    <Button sx={btnEditProfile}>
+                      <Box
+                        sx={{ mr: 1, display: 'flex', alignItems: 'center' }}
+                      >
+                        <EditIcon fill={color.white} size={16} />
+                      </Box>
+                      Edit Profile
+                    </Button>
+                  ) : (
+                    <Button sx={btnEditProfile}>
+                      <Box
+                        sx={{ mr: 1, display: 'flex', alignItems: 'center' }}
+                      >
+                        <UserPlusSvg fill={color.white} size={16} />
+                      </Box>
+                      Add friend
+                    </Button>
+                  )}
                 </Box>
               </Box>
             </Box>
@@ -263,15 +287,15 @@ const Profile = () => {
                       Intro
                     </Box>
                   </Typography>
-                  <Bio />
-                  <EditDetails />
-                  <EditHobbies />
+                  <Bio check={checkUser} />
+                  <EditDetails check={checkUser} />
+                  <EditHobbies check={checkUser} />
                 </Box>
               </Box>
             </Box>
           </ThemeProvider>
           <Box sx={postContent}>
-            <ListPost />
+            <ListPostProfile user={userId} check={checkUser} />
           </Box>
         </Box>
       </Box>

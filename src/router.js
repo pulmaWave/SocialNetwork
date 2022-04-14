@@ -9,7 +9,7 @@ import ListBeauty from './views/Beauty/ListBeauty';
 import SignIn from './views/SignIn';
 import SignUp from './views/SignUp';
 import Messages from './views/Messages';
-import Profile from './views/Profile/Profile'
+import Profile from './views/Profile/Profile';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -36,9 +36,6 @@ export default function Router() {
       path: '/sign-up',
       element: <SignUp />
     },
-    {
-      path: '/profile',
-      element: <Profile />
-    }
+    { path: '/profile=:userId', element: <Profile /> }
   ]);
 }

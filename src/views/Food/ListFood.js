@@ -57,6 +57,7 @@ const ListFood = () => {
               return (
                 <Post
                   id={post?.id}
+                  uidPost={post?.uid}
                   key={post?.id}
                   content={post?.content?.isContent}
                   url={post?.imageUrl?.url}

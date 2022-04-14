@@ -8,7 +8,7 @@ import WatchSvg from '../../components/icons/WatchSvg';
 
 const color = colors.colors;
 
-const EditDetails = () => {
+const EditDetails = (check) => {
   const btnEditProfile = {
     fontSize: '15px',
     fontWeight: 'bold',
@@ -30,7 +30,7 @@ const EditDetails = () => {
   };
 
   return (
-    <Box sx={{ mt: 2 }}>
+    <Box>
       <Typography component="div" variant="body" sx={component}>
         <HomeSvg fill={color.main} size={20} />
         <Box
@@ -71,12 +71,14 @@ const EditDetails = () => {
           Joined November 2012
         </Box>
       </Typography>
-      <Button sx={btnEditProfile}>
-        <Box sx={{ mr: 1, display: 'flex', alignItems: 'center' }}>
-          <EditIcon fill={color.white} size={16} />
-        </Box>
-        Edit details
-      </Button>
+      {check.check && (
+        <Button sx={btnEditProfile}>
+          <Box sx={{ mr: 1, display: 'flex', alignItems: 'center' }}>
+            <EditIcon fill={color.white} size={16} />
+          </Box>
+          Edit details
+        </Button>
+      )}
     </Box>
   );
 };

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, Divider } from '@mui/material';
 import colors from '../../assets/style/GlobalStyles';
 
 const color = colors.colors;
 
-const Bio = () => {
+const Bio = (check) => {
   const btnEditProfile = {
     fontSize: '15px',
     fontWeight: 'bold',
@@ -24,16 +24,15 @@ const Bio = () => {
           sx={{
             color: `${color.color}`,
             textAlign: 'center',
-            mb: 1, 
+            mb: 1,
             fontSize: 15
           }}
         >
           When?
         </Box>
       </Typography>
-      <Button sx={btnEditProfile}>
-        Edit bio
-      </Button>
+      {check.check && <Button sx={btnEditProfile}>Edit bio</Button>}
+      <Divider />
     </Box>
   );
 };

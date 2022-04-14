@@ -3,7 +3,7 @@ import Post from '../../components/Post';
 import Loading from '../../layout/Loading';
 import { Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { getDocs, collection, orderBy, query } from 'firebase/firestore';
+import { getDocs, collection, orderBy, query, limit, startAfter } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useDispatch, useSelector } from 'react-redux';
 import { addListPost } from '../../redux/action/actions';
@@ -30,7 +30,7 @@ const ListPost = () => {
 
   useEffect(() => {
     setLoading(true);
-    getDocs(query(collection(db, 'posts'), orderBy('createAt', 'desc'))).then(
+    getDocs(query(collection(db, 'posts'), orderBy('createAt', 'desc'), limit(2))).then(
       (res) => {
         let arr = [];
         res.forEach((doc) => {
@@ -80,6 +80,7 @@ const ListPost = () => {
               return (
                 <Post
                   id={post?.id}
+                  uidPost={post?.uid}
                   key={post?.id}
                   content={post?.content?.isContent}
                   url={post?.imageUrl?.url}

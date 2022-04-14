@@ -24,7 +24,7 @@ const getCollection = async (collectionName) => {
       return arr;
     });
   } catch (err) {
-    console.log(err);
+    console.log('error: ', err);
   }
 };
 
@@ -92,12 +92,14 @@ const getSubCollection = async (subColRef, setSubClt) => {
 const getSubColRTime = async (subColRef, setSubClt) => {
   // const subColRef = collection(db, collectionName, document, subCollection);
   let arr = [];
-  onSnapshot(subColRef, (querySnapshot) => {
-    querySnapshot.forEach((doc) => {
-      arr.push({
-        id: doc.id,
-        ...doc.data()
-      });
+  onSnapshot(subColRef, (snapshot) => {
+    snapshot.docChanges().forEach((change) => {
+      if (change.type === 'added') {
+        arr.push({
+          id: change.doc.id,
+          ...change.doc.data()
+        });
+      }
     });
     setSubClt(arr);
   });

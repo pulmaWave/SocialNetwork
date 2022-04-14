@@ -13,6 +13,16 @@ export const addListPost = (data) => ({
   payload: data
 });
 
+export const addListPostProfile = (data) => ({
+  type: 'listPost/addListPostProfile',
+  payload: data
+});
+
+export const addOnePostProfile = (data) => ({
+  type: 'listPost/addOnePostProfile',
+  payload: data
+});
+
 export const addOnePost = (data) => ({
   type: 'listPost/addOnePost',
   payload: data
