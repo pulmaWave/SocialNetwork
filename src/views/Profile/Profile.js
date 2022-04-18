@@ -17,6 +17,9 @@ import IconsBar from '../../theme/IconsBar';
 import gift from '../../assets/images/giphy.gif';
 import { useParams } from 'react-router-dom';
 import { getDocById } from '../../utilities/utilities';
+import { arrayUnion, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../../config/firebase';
+import ScrollToTop from '../../components/ScrollToTop';
 
 const color = colors.colors;
 
@@ -49,8 +52,17 @@ const Profile = () => {
   }, [userId]);
 
   const handleRequestFriend = async () => {
-
-  }
+    try {
+      // add data to firestore
+      await updateDoc(doc(db, 'users', userId), {
+        friendReq: arrayUnion({ request: uidLogged, isAccepted: false })
+      }).then((res) => {
+        console.log('id document add user: ', res);
+      });
+    } catch (err) {
+      alert(err);
+    }
+  };
 
   const header = {
     display: 'flex',
@@ -181,6 +193,7 @@ const Profile = () => {
 
   return (
     <Box>
+      <ScrollToTop />
       <AppBar />
       <Box
         sx={{
