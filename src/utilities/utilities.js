@@ -63,6 +63,29 @@ const getListQueryPost = (setLoading, setPosts, query) => {
   });
 };
 
+const fetchMoreData = async (
+  query,
+  setLastVisible,
+  dataLength,
+  setDataLength
+) => {
+  const data = await getDocs(query);
+  let arr = [];
+  data.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    arr.push({
+      id: doc.id,
+      ...doc.data()
+    });
+  });
+  // send data to store redux
+  // dispatch(addMorePost(arr));
+  // set index previous post
+  setLastVisible(data.docs[data.docs.length - 1]);
+  // set count posts wanna display
+  setDataLength(dataLength + 10);
+};
+
 // get one post from firestore
 const getDocById = async (collection, id) => {
   const noteSnapshot = await getDoc(doc(db, collection, id));
@@ -111,5 +134,6 @@ export {
   getListQueryPost,
   getDocById,
   getSubCollection,
-  getSubColRTime
+  getSubColRTime,
+  fetchMoreData
 };

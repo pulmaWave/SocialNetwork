@@ -3,9 +3,10 @@ import Post from '../../components/Post';
 import Loading from '../../layout/Loading';
 import { Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { collection, orderBy, query, where } from 'firebase/firestore';
+import { collection, limit, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { getListQueryPost } from '../../utilities/utilities';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const theme = createTheme({
   breakpoints: {
@@ -20,10 +21,13 @@ const theme = createTheme({
 const ListBeauty = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [lastVisible, setLastVisible] = useState(1);
+  const [dataLength, setDataLength] = useState(10);
   const qBeauty = query(
     collection(db, 'posts'),
     where('tags', 'array-contains', 'beauty'),
-    orderBy('createAt', 'desc')
+    orderBy('createAt', 'desc'),
+    limit(10)
   );
   useEffect(() => {
     getListQueryPost(setLoading, setPosts, qBeauty);

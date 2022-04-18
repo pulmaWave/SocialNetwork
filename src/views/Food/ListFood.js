@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { collection, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { getListQueryPost } from '../../utilities/utilities';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const theme = createTheme({
   breakpoints: {
@@ -20,6 +21,8 @@ const theme = createTheme({
 const ListFood = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [lastVisible, setLastVisible] = useState(1);
+  const [dataLength, setDataLength] = useState(10);
   const qFood = query(
     collection(db, 'posts'),
     where('tags', 'array-contains', 'food'),

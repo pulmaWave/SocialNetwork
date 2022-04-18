@@ -48,6 +48,10 @@ const Profile = () => {
     } else setCheckUser(false);
   }, [userId]);
 
+  const handleRequestFriend = async () => {
+
+  }
+
   const header = {
     display: 'flex',
     flexDirection: 'column',
@@ -242,7 +246,7 @@ const Profile = () => {
                       Edit Profile
                     </Button>
                   ) : (
-                    <Button sx={btnEditProfile}>
+                    <Button sx={btnEditProfile} onClick={handleRequestFriend}>
                       <Box
                         sx={{ mr: 1, display: 'flex', alignItems: 'center' }}
                       >

@@ -44,7 +44,7 @@ function Media(props) {
           sx={{
             width: 500,
             height: 400,
-            m: 2,
+            mt: 2,
             [theme.breakpoints.down('m500')]: {
               width: '90vw'
             }
@@ -104,7 +104,7 @@ function Media(props) {
           sx={{
             width: 500,
             height: 575,
-            m: 2,
+            mt: 2,
             [theme.breakpoints.down('m500')]: {
               width: '90vw'
             }

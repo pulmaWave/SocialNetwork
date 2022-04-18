@@ -3,9 +3,18 @@ import Post from '../../components/Post';
 import Loading from '../../layout/Loading';
 import { Box } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { collection, orderBy, query, where } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where
+} from 'firebase/firestore';
+import Spinner from '../../components/Spinner';
 import { db } from '../../config/firebase';
-import { getListQueryPost } from '../../utilities/utilities';
+import { getListQueryPost, fetchMoreData } from '../../utilities/utilities';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const theme = createTheme({
   breakpoints: {
@@ -20,12 +29,21 @@ const theme = createTheme({
 const ListPostTravel = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [countPosts, setCountPosts] = useState(0);
+  const [lastVisible, setLastVisible] = useState(1);
+  const [dataLength, setDataLength] = useState(10);
   const qTravel = query(
     collection(db, 'posts'),
     where('tags', 'array-contains', 'travel'),
-    orderBy('createAt', 'desc')
+    orderBy('createAt', 'desc'),
+    limit(10)
   );
   useEffect(() => {
+    const getList = async () => {
+      const listPost = await getDocs(query(collection(db, 'posts')));
+      setCountPosts(listPost.size); //listPost.size is count item in listPost
+    };
+    getList();
     getListQueryPost(setLoading, setPosts, qTravel);
   }, []);
 
@@ -52,22 +70,40 @@ const ListPostTravel = () => {
             }
           }}
         >
-          {posts.length > 0 &&
-            posts.map((post) => {
-              return (
-                <Post
-                  id={post?.id}
-                  key={post?.id}
-                  uidPost={post?.uid}
-                  content={post?.content?.isContent}
-                  url={post?.imageUrl?.url}
-                  tags={post?.tags}
-                  voteBy={post?.voteBy}
-                  counterVote={post?.counterVote}
-                  createAt={post?.createAt}
-                />
-              );
-            })}
+          <InfiniteScroll
+            dataLength={dataLength}
+            next={fetchMoreData(
+              query,
+              dataLength,
+              setDataLength,
+              setLastVisible
+            )}
+            hasMore={countPosts === posts.length ? false : true}
+            endMessage={
+              <p style={{ textAlign: 'center' }}>
+                <b>Yay! You have seen it all</b>
+              </p>
+            }
+            loader={<Spinner />}
+            style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}
+          >
+            {posts.length > 0 &&
+              posts.map((post) => {
+                return (
+                  <Post
+                    id={post?.id}
+                    key={post?.id}
+                    uidPost={post?.uid}
+                    content={post?.content?.isContent}
+                    url={post?.imageUrl?.url}
+                    tags={post?.tags}
+                    voteBy={post?.voteBy}
+                    counterVote={post?.counterVote}
+                    createAt={post?.createAt}
+                  />
+                );
+              })}
+          </InfiniteScroll>
         </Box>
       )}
     </ThemeProvider>

@@ -82,6 +82,7 @@ const boxShow = {
 
 const Comment = (props) => {
   const [user, setUser] = useState('');
+  const [loaded, setLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     try {
@@ -111,10 +112,25 @@ const Comment = (props) => {
             component="img"
             height="32px"
             image={user.image}
-            src={Male}
+            onLoad={() => {
+              setLoaded(true);
+            }}
             alt="avatar"
-            sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
+            sx={
+              loaded
+                ? { borderRadius: '50%', marginRight: '10px', width: '32px' }
+                : { display: 'none' }
+            }
           />
+          {loaded ? null : (
+            <CardMedia
+              component="img"
+              height="32px"
+              image={user.gender === 'male' ? Male : Female}
+              alt="avatar"
+              sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
+            />
+          )}
         </Link>
         <Box
           sx={{
@@ -338,20 +354,25 @@ const Post = ({
                 {tags.length > 0 &&
                   tags.map((tag, index) => {
                     return (
-                      <Typography
-                        key={index}
-                        component="div"
-                        sx={{
-                          ml: '10px',
-                          bgcolor: `${color.main}`,
-                          color: `${color.white}`,
-                          padding: '0 10px',
-                          borderRadius: '50px',
-                          fontStyle: 'italic'
-                        }}
+                      <Link
+                        to={`/${tag}`}
+                        style={{ textDecoration: 'none', color: 'unset' }}
                       >
-                        <Box sx={{ fontSize: 15 }}>{tag}</Box>
-                      </Typography>
+                        <Typography
+                          key={index}
+                          component="div"
+                          sx={{
+                            ml: '10px',
+                            bgcolor: `${color.main}`,
+                            color: `${color.white}`,
+                            padding: '0 10px',
+                            borderRadius: '50px',
+                            fontStyle: 'italic'
+                          }}
+                        >
+                          <Box sx={{ fontSize: 15 }}>{tag}</Box>
+                        </Typography>
+                      </Link>
                     );
                   })}
               </Box>
@@ -498,23 +519,25 @@ const Post = ({
         </Box>
         <Box sx={commentAct ? boxShow : boxNone}>
           <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-            {loaded ? (
-              <CardMedia
-                component="img"
-                height="32px"
-                image={avt}
-                onLoad={() => {
-                  setLoaded(true);
-                }}
-                alt="avatar"
-                sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
-              />
-            ) : (
+            <CardMedia
+              component="img"
+              height="32px"
+              image={avt}
+              onLoad={() => {
+                setLoaded(true);
+              }}
+              alt="avatar"
+              sx={
+                loaded
+                  ? { borderRadius: '50%', marginRight: '10px', width: '32px' }
+                  : { display: 'none' }
+              }
+            />
+            {loaded ? null : (
               <CardMedia
                 component="img"
                 height="32px"
                 image={Male}
-                onLoad
                 alt="avatar"
                 sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
               />

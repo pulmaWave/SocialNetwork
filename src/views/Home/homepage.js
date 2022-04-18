@@ -5,7 +5,7 @@ import IconsBar from '../../theme/IconsBar';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import colors from '../../assets/style/GlobalStyles';
-
+import ScrollToTop from '../../components/ScrollToTop';
 const color = colors.colors;
 
 const theme = createTheme({
@@ -20,6 +20,7 @@ const theme = createTheme({
 const homepage = () => {
   return (
     <Box>
+      <ScrollToTop />
       <Box sx={{ marginBottom: '65px' }}>
         <AppBar />
       </Box>
@@ -29,7 +30,7 @@ const homepage = () => {
       <ThemeProvider theme={theme}>
         <Box
           sx={{
-            boxShadow:' 0 -1px 1px -1px gray',
+            boxShadow: ' 0 -1px 1px -1px gray',
             boxSizing: 'border-box',
             width: '100%',
             position: 'fixed',
@@ -43,7 +44,10 @@ const homepage = () => {
             }
           }}
         >
-          <IconsBar colorActive={`${color.main}`} color={`${color.gray[600]}`} />
+          <IconsBar
+            colorActive={`${color.main}`}
+            color={`${color.gray[600]}`}
+          />
         </Box>
       </ThemeProvider>
     </Box>

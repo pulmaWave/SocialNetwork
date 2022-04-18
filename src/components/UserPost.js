@@ -12,6 +12,7 @@ const color = colors.colors;
 const UserPost = (props) => {
   // const displayName = localStorage.getItem('userName');
   const [user, setUser] = useState('');
+  const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     getDocById('users', props.uidPost).then((data) => {
       setUser(data);
@@ -41,10 +42,26 @@ const UserPost = (props) => {
           <CardMedia
             component="img"
             height="40px"
-            image={Male}
+            image={user.image}
+            onLoad={() => {
+              setLoaded(true);
+            }}
             alt="avatar"
-            sx={{ borderRadius: '50%', width: '40px' }}
+            sx={
+              loaded
+                ? { borderRadius: '50%', width: '40px' }
+                : { display: 'none' }
+            }
           />
+          {loaded ? null : (
+            <CardMedia
+              component="img"
+              height="40px"
+              image={user.gender === 'male' ? Male : Female}
+              alt="avatar"
+              sx={{ borderRadius: '50%', width: '40px' }}
+            />
+          )}
         </Box>
       </Link>
       <Box sx={{ marginLeft: '10px' }}>

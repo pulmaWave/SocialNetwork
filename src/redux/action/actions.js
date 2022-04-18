@@ -28,6 +28,11 @@ export const addOnePost = (data) => ({
   payload: data
 });
 
+export const addMorePost = (data) => ({
+  type: 'listPost/addMorePost',
+  payload: data
+});
+
 export const setTagPost = (data) => ({
   type: 'post/setTagPost',
   payload: data
