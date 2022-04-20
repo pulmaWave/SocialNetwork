@@ -57,6 +57,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 }));
 
 export default function PrimarySearchAppBar() {
+  const uid = localStorage.getItem('uid');
   const navigate = useNavigate();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -139,21 +140,23 @@ export default function PrimarySearchAppBar() {
         >
           <Box sx={{ display: 'flex', alignItems: 'center', width: '400px' }}>
             <ThemeProvider theme={theme}>
-              <IconButton
-                size="medium"
-                edge="start"
-                color="primary"
-                aria-label="open drawer"
-                sx={{
-                  mr: 2,
-                  color: `${color.white}`,
-                  [theme.breakpoints.down('mb')]: {
-                    mr: 'unset'
-                  }
-                }}
-              >
-                <MenuIcon />
-              </IconButton>
+              <Link to={`/profile=${uid}`}>
+                <IconButton
+                  size="medium"
+                  edge="start"
+                  color="primary"
+                  aria-label="open drawer"
+                  sx={{
+                    mr: 2,
+                    color: `${color.white}`,
+                    [theme.breakpoints.down('mb')]: {
+                      mr: 'unset'
+                    }
+                  }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              </Link>
             </ThemeProvider>
             <ThemeProvider theme={theme}>
               <Box sx={{ width: '100%' }}>

@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import Post from '../../components/Post';
 import Loading from '../../layout/Loading';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { getDocs, collection, orderBy, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebase';
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addListPostProfile } from '../../redux/action/actions';
 import { listPostProfileSelector } from '../../redux/selector';
 import ShowCreatePost from '../../components/ShowCreatePost';
+import { colors } from '../../assets/style/GlobalStyles';
 
 const theme = createTheme({
   breakpoints: {
@@ -76,7 +77,7 @@ const ListPostProfile = ({ check, user }) => {
           }}
         >
           {check && <ShowCreatePost />}
-          {listPosted.length > 0 &&
+          {listPosted.length > 0 ? (
             listPosted.map((post) => {
               return (
                 <Post
@@ -91,7 +92,21 @@ const ListPostProfile = ({ check, user }) => {
                   createAt={post?.createAt}
                 />
               );
-            })}
+            })
+          ) : (
+            <Typography component="div">
+              <Box
+                sx={{
+                  fontSize: 20,
+                  fontWeight: 'bold',
+                  color: `${colors.iconNotSvg}`,
+                  textAlign: 'center'
+                }}
+              >
+                No posts available
+              </Box>
+            </Typography>
+          )}
         </Box>
       )}
     </ThemeProvider>

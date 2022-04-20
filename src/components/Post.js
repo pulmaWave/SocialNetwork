@@ -30,8 +30,9 @@ import {
 import { db } from '../config/firebase';
 import { getDocById, getSubColRTime } from '../utilities/utilities';
 import moment from 'moment';
-import Male from '../assets/images/avatarMale.jpg';
-import Female from '../assets/images/girl.png';
+import Male from '../assets/images/avtdefault.jpg';
+import Female from '../assets/images/avtdefault.jpg';
+import avtDefault from '../assets/images/avtdefault.jpg';
 import { Link } from 'react-router-dom';
 
 const color = colors.colors;
@@ -126,7 +127,7 @@ const Comment = (props) => {
             <CardMedia
               component="img"
               height="32px"
-              image={user.gender === 'male' ? Male : Female}
+              image={user.gender === 'male' ? Male : avtDefault}
               alt="avatar"
               sx={{ borderRadius: '50%', marginRight: '10px', width: '32px' }}
             />
@@ -226,6 +227,9 @@ const Post = ({
       });
       setListCmt(arr);
     });
+    return () => {
+      getDocs(subColRef);
+    };
   }, []);
 
   const handleClickVote = async () => {
@@ -355,11 +359,11 @@ const Post = ({
                   tags.map((tag, index) => {
                     return (
                       <Link
+                        key={index}
                         to={`/${tag}`}
                         style={{ textDecoration: 'none', color: 'unset' }}
                       >
                         <Typography
-                          key={index}
                           component="div"
                           sx={{
                             ml: '10px',

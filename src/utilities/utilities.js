@@ -1,10 +1,14 @@
+import { ConstructionOutlined } from '@mui/icons-material';
 import {
   doc,
   getDoc,
   getDocs,
   collection,
   setDoc,
-  onSnapshot
+  onSnapshot,
+  query,
+  where,
+  documentId,
 } from 'firebase/firestore';
 
 import { db } from '../config/firebase';
@@ -96,6 +100,18 @@ const getDocById = async (collection, id) => {
   }
 };
 
+const getDocByIds = async (collections, ids) => {
+  const noteSnapshot = await getDocs(
+    query(collection(db, 'users'), where(documentId(), 'in', ids))
+  );
+  console.log('noteSnapshot', noteSnapshot.docs);
+  if (noteSnapshot.exists()) {
+    return noteSnapshot.data();
+  } else {
+    console.log("Note doesn't exist");
+  }
+};
+
 //get sub collection
 // collection/document/sub_collection
 const getSubCollection = async (subColRef, setSubClt) => {
@@ -135,5 +151,6 @@ export {
   getDocById,
   getSubCollection,
   getSubColRTime,
-  fetchMoreData
+  fetchMoreData,
+  getDocByIds
 };

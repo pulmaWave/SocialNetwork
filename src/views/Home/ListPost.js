@@ -70,6 +70,7 @@ const ListPost = () => {
     });
     return () => {
       getList();
+      getDocById('users', localStorage.getItem('uid'));
     };
   }, []);
 
@@ -139,15 +140,15 @@ const ListPost = () => {
               listPosted.map((post) => {
                 return (
                   <Post
-                    id={post?.id}
-                    uidPost={post?.uid}
-                    key={post?.id}
-                    content={post?.content?.isContent}
-                    url={post?.imageUrl?.url}
-                    tags={post?.tags}
-                    voteBy={post?.voteBy}
-                    counterVote={post?.counterVote}
-                    createAt={post?.createAt}
+                    id={post.id}
+                    uidPost={post.uid}
+                    key={post.id}
+                    content={post.content.isContent}
+                    url={post.imageUrl.url}
+                    tags={post.tags}
+                    voteBy={post.voteBy}
+                    counterVote={post.counterVote}
+                    createAt={post.createAt}
                   />
                 );
               })}

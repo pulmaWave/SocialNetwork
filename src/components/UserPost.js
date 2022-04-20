@@ -1,11 +1,11 @@
 import { React, useEffect, useState } from 'react';
 import { Box, Typography, CardMedia } from '@mui/material';
-import Male from '../assets/images/avatarMale.jpg';
-import Female from '../assets/images/girl.png';
+import Male from '../assets/images/avtdefault.jpg';
+import Female from '../assets/images/avtdefault.jpg';
 import colors from '../assets/style/GlobalStyles';
 import EarthSvg from '../components/icons/EarthSvg';
 import { getDocById } from '../utilities/utilities';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const color = colors.colors;
 
@@ -17,6 +17,9 @@ const UserPost = (props) => {
     getDocById('users', props.uidPost).then((data) => {
       setUser(data);
     });
+    return () => {
+      getDocById('users', props.uidPost);
+    };
   }, [props.uidPost]);
   return (
     <Box

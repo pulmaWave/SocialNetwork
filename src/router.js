@@ -10,6 +10,7 @@ import SignIn from './views/SignIn';
 import SignUp from './views/SignUp';
 import Messages from './views/Messages';
 import Profile from './views/Profile/Profile';
+import { Posts, FriendRequests, Friends, Photos } from './views/Profile/Profile';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -36,6 +37,15 @@ export default function Router() {
       path: '/sign-up',
       element: <SignUp />
     },
-    { path: '/profile=:userId', element: <Profile /> }
+    {
+      path: '/profile=:userId/',
+      element: <Profile />,
+      children: [
+        { path: '', element: <Posts /> },
+        { path: 'photos', element: <Photos /> },
+        { path: 'friends', element: <Friends /> },
+        { path: 'friends/requests', element: <FriendRequests /> }
+      ]
+    }
   ]);
 }
