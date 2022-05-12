@@ -9,8 +9,15 @@ import ListBeauty from './views/Beauty/ListBeauty';
 import SignIn from './views/SignIn';
 import SignUp from './views/SignUp';
 import Messages from './views/Messages';
+import { App } from './views/Messages';
 import Profile from './views/Profile/Profile';
-import { Posts, FriendRequests, Friends, Photos } from './views/Profile/Profile';
+import {
+  Posts,
+  FriendRequests,
+  Friends,
+  Photos
+} from './views/Profile/Profile';
+import { NoMessage } from './views/Messages';
 // ----------------------------------------------------------------------
 
 export default function Router() {
@@ -30,8 +37,12 @@ export default function Router() {
       element: <SignIn />
     },
     {
-      path: '/messages',
-      element: <Messages />
+      path: '/messages/',
+      element: <Messages />,
+      children: [
+        { path: '', element: <NoMessage /> },
+        { path: ':userId/', element: <App /> }
+      ]
     },
     {
       path: '/sign-up',

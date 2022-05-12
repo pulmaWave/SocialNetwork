@@ -37,3 +37,17 @@ export const setTagPost = (data) => ({
   type: 'post/setTagPost',
   payload: data
 });
+
+export const addFriends = (data) => {
+  return {
+    type: 'friends/addFriends',
+    payload: data
+  };
+};
+
+export const setPopUp = (data) => {
+  return {
+    type: 'setPopUp',
+    payload: data
+  };
+};

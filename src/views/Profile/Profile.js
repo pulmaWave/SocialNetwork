@@ -39,6 +39,7 @@ const theme = createTheme({
       mb: 480,
       md: 650,
       m900: 900,
+      m920: 920,
       m940: 940,
       large: 1440
     }
@@ -50,10 +51,11 @@ const content = {
   display: 'flex',
   justifyContent: 'space-around',
   width: 900,
-  [theme.breakpoints.down('m900')]: {
+  [theme.breakpoints.down('m920')]: {
     flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    width: 'unset'
   }
 };
 
@@ -75,7 +77,7 @@ const introduce = {
   p: '15px',
   boxSizing: 'border-box',
   bgcolor: `${color.white}`,
-  [theme.breakpoints.down('m900')]: {
+  [theme.breakpoints.down('m920')]: {
     maxWidth: 500
   }
 };
@@ -113,7 +115,7 @@ const Posts = () => {
           <Box
             sx={{
               width: '40%',
-              [theme.breakpoints.down('m900')]: {
+              [theme.breakpoints.down('m920')]: {
                 width: 'unset'
               }
             }}
@@ -158,9 +160,7 @@ const container = {
   border: `0.5px solid ${color.btnBgColor}`,
   bgcolor: `${color.white}`
   // [theme.breakpoints.down('m900')]: {
-  //   flexDirection: 'column',
-  //   alignItems: 'center',
-  //   justifyContent: 'center'
+  //   width: 'unset'
   // }
 };
 
@@ -594,7 +594,6 @@ const Profile = () => {
   const [user, setUser] = useState('');
   const [checkUser, setCheckUser] = useState(false);
   const uidLogged = localStorage.getItem('uid');
-  console.log(isFriend);
 
   useEffect(() => {
     getDocById('users', userId).then((data) => {
@@ -604,12 +603,10 @@ const Profile = () => {
       setCheckUser(true);
     } else setCheckUser(false);
     getDocById('users', uidLogged).then((data) => {
-      console.log('data.friends', data.friends);
       setFriend(data.friends);
       let i = 0;
       let length = data.friends.length;
       for (i; i < length; i++) {
-        console.log('data.friends.uid', data.friends[i].uid);
         if (userId === data.friends[i].uid) {
           setIsFriend(true);
           break;
@@ -618,7 +615,7 @@ const Profile = () => {
         }
       }
     });
-  }, [userId, uidLogged]);
+  }, [userId]);
 
   const handleAddFriend = async () => {
     setFriendRequest(true);

@@ -139,7 +139,8 @@ export default function KeepMountedModal() {
   const dispatch = useDispatch();
   const userName = localStorage.getItem('userName');
   const avt = localStorage.getItem('avt');
-
+  const uid = localStorage.getItem('uid');
+  
   //list tag from redux
   const tags = useSelector(setTagPost);
   //Display a preview of the image using the URL object
@@ -250,9 +251,6 @@ export default function KeepMountedModal() {
         <Modal keepMounted open={open} onClose={handleClose}>
           <Box sx={style}>
             <Box>
-              {/* <IconButton open={open} onClick={handleClose}>
-                <ChevronLeftIcon />
-              </IconButton> */}
               <Typography
                 component="div"
                 variant="h5"
@@ -277,7 +275,12 @@ export default function KeepMountedModal() {
                 X
               </button>
             </Box>
-            <UserInfo paddingLeft={'10px'} displayName={userName} image={avt} />
+            <UserInfo
+              paddingLeft={'10px'}
+              displayName={userName}
+              image={avt}
+              link={`profile=${uid}`}
+            />
             <Box
               component="form"
               sx={{

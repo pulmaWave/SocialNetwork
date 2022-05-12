@@ -1,38 +1,51 @@
-import * as React from 'react';
+import { React, useState, useEffect } from 'react';
 import { Box } from '@mui/material';
 import UserInfo from '../../UserInfo/UserInfo';
-import { getDocs, collection } from 'firebase/firestore';
-import { db } from '../../../config/firebase';
+import { getDocById } from '../../../utilities/utilities';
+import { useDispatch } from 'react-redux';
+import { addFriends } from '../../../redux/action/actions';
 
 const ListFriend = () => {
-  const [users, setUsers] = React.useState();
-  // React.useEffect(() => {
-  //   getDocs(collection(db, 'users')).then((res) => {
-  //     console.log(res);
-  //     // let arr = [];
-  //     // res.forEach((doc) => {
-  //     //   // doc.data() is never undefined for query doc snapshots
-  //     //   arr.push({
-  //     //     id: doc.id,
-  //     //     ...doc.data()
-  //     //   });
-  //     // });
-  //     // setUsers(arr);
-  //     // console.log('arr: ', arr)
-  //   });
-  // }, []);
+  const dispatch = useDispatch();
+  const [friends, setFriends] = useState([]);
+  // const [loaded, setLoaded] = useState(false);
+  const uidLogged = localStorage.getItem('uid');
+
+  useEffect(() => {
+    // get all users in list add friend requests of one user
+    const getUsersFriend = async (uidLogged) => {
+      let arr = [];
+      const data = await getDocById('users', uidLogged);
+      let i = 0;
+      const length = data.friends.length;
+      for (i; i < length; i++) {
+        let users = await getDocById('users', data.friends[i].uid); // get information of user
+        arr.push(users);
+      }
+
+      // add list friend to redux
+      dispatch(addFriends(arr));
+      setFriends(arr);
+    };
+    getUsersFriend(uidLogged);
+    return () => {
+      getUsersFriend(uidLogged);
+    };
+  }, [uidLogged, dispatch]);
   return (
     <Box>
-      {/* {users.length > 0 &&
-        users.maps((user) => {
+      {friends.length > 0 &&
+        friends.map((friend) => {
           return (
             <UserInfo
-              key={user.uid}
-              displayName={user.userName}
-              image={user.image}
+              key={friend.uid}
+              displayName={friend.userName}
+              image={friend.image}
+              uid={friend.uid}
+              link=""
             />
           );
-        })} */}
+        })}
     </Box>
   );
 };

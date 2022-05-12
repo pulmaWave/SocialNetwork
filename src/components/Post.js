@@ -34,6 +34,7 @@ import Male from '../assets/images/avtdefault.jpg';
 import Female from '../assets/images/avtdefault.jpg';
 import avtDefault from '../assets/images/avtdefault.jpg';
 import { Link } from 'react-router-dom';
+import { decode } from 'html-entities';
 
 const color = colors.colors;
 const theme = createTheme({
@@ -41,7 +42,8 @@ const theme = createTheme({
     values: {
       xs: 0,
       mb: 480,
-      md: 650
+      md: 650,
+      m900: 900
     }
   }
 });
@@ -166,8 +168,14 @@ const Comment = (props) => {
             </Typography>
           </Link>
           <Typography component="div">
-            <Box sx={{ fontSize: '15px', wordBreak: 'break-word' }}>
-              {props.comment}
+            <Box
+              sx={{
+                fontSize: '15px',
+                wordBreak: 'break-word',
+                whiteSpace: 'pre-wrap'
+              }}
+            >
+              {props.comment.replace('\\n', '\n')}
             </Box>
           </Typography>
         </Box>
@@ -275,9 +283,9 @@ const Post = ({
   const handleComment = async () => {
     try {
       await addDoc(collection(db, `posts/${id}/comments`), {
-        comment: { commentMessage },
+        comment: commentMessage.replace(/\n/g, '\\n'),
         createAt: serverTimestamp(),
-        uid: { uid }
+        uid
       });
     } catch (error) {
       console.log(error);
@@ -313,7 +321,8 @@ const Post = ({
           },
           paddingBottom: '10px',
           boxShadow: 1,
-          backgroundColor: `${color.white}`
+          backgroundColor: `${color.white}`,
+          [theme.breakpoints.down('m900')]: {}
         }}
       >
         <ThemeProvider theme={theme}>
@@ -512,12 +521,7 @@ const Post = ({
           {listCmt.length > 0 &&
             listCmt.map((data) => {
               return (
-                <Comment
-                  key={data.id}
-                  uid={data.uid.uid}
-                  userName="Lucas Nguyen"
-                  comment={data.comment.commentMessage}
-                />
+                <Comment key={data.id} uid={data.uid} comment={data.comment} />
               );
             })}
         </Box>

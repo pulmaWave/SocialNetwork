@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AppBar from '../../components/NavBar/AppBar';
 import Main from '../../components/Main/Main';
 import IconsBar from '../../theme/IconsBar';
@@ -6,6 +6,10 @@ import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import colors from '../../assets/style/GlobalStyles';
 import ScrollToTop from '../../components/ScrollToTop';
+import { useSelector } from 'react-redux';
+import PopupChat from '../../components/PopupChat';
+import { popUpSelector } from '../../redux/selector';
+
 const color = colors.colors;
 
 const theme = createTheme({
@@ -17,7 +21,13 @@ const theme = createTheme({
   }
 });
 
-const homepage = () => {
+const Homepage = () => {
+  const popUpRedux = useSelector(popUpSelector);
+  const [popup, setPopup] = useState(popUpRedux);
+
+  useEffect(() => {
+    setPopup(Object.values(popUpRedux));
+  }, [popUpRedux]);
   return (
     <Box>
       <ScrollToTop />
@@ -50,8 +60,39 @@ const homepage = () => {
           />
         </Box>
       </ThemeProvider>
+      <Box
+        sx={{
+          position: 'relative',
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            gap: 1,
+            position: 'fixed',
+            bottom: 0,
+            right: 0
+          }}
+        >
+          {popup.length > 0 &&
+            popup.map((chat) => {
+              return (
+                <PopupChat
+                  key={chat.uid}
+                  uid={chat.uid}
+                  displayName={chat.displayName}
+                  image={chat.image}
+                />
+              );
+            })}
+        </Box>
+      </Box>
     </Box>
   );
 };
 
-export default homepage;
+export default Homepage;

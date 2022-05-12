@@ -6,7 +6,7 @@ import Friend from './Friend';
 import Save from './Save';
 import ListAds from './ListAds';
 import colors from '../../../assets/style/GlobalStyles';
-import Male from '../../../assets/images/avatarMale.jpg';
+import Male from '../../../assets/images/avtdefault.jpg';
 import Female from '../../../assets/images/girl.png';
 import { getDocById } from '../../../utilities/utilities';
 import Loading from '../../../layout/loadingUser';
@@ -50,8 +50,9 @@ const SideBar = () => {
           <Loading />
         ) : (
           <UserInfo
-            image={user?.image || 1 > 0 ? Male : Female}
+            image={user?.image || Male}
             displayName={user.userName}
+            link={`/profile=${uid}`}
           />
         )}
       </Box>
